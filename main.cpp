@@ -1,6 +1,11 @@
 #include <iostream>
+#include <random>
+#include <time.h>
+
 #define X_MAX 80
 #define Y_MAX 23
+#define ROOMS 8
+#define ROOM_SIZE 7
 
 using namespace std;
 
@@ -108,12 +113,34 @@ void corridor(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int e
     }
 }
 
+void generate(char map[X_MAX][Y_MAX])
+{
+    int corridor_x;
+    int corridor_y;
+    for(int r=0; r<ROOMS; r++)
+    {
+        int size_x = rand() % ROOM_SIZE + 1;
+        int size_y = rand() % ROOM_SIZE + 1;
+        int start_x = rand() % (X_MAX - size_x);
+        int start_y = rand() % (Y_MAX - size_y);
+        room(map, start_x, start_y, start_x + size_x, start_y + size_y);
+        if(r > 0)
+        {
+            int link_x = rand() % size_x + 1 + start_x;
+            int link_y = rand() % size_y + 1 + start_y;
+            corridor(map, link_x, link_y, corridor_x, corridor_y, rand() % 2);
+        }
+        corridor_x = rand() % size_x + start_x;
+        corridor_y = rand() % size_y + start_y;
+    }
+}
+
 int main()
 {
     char map[X_MAX][Y_MAX]; //Mappa del gioco
+    srand(time(NULL)); //TODO: Rendere il seed modificabile
     init(map);
-    corridor(map, 1, 1, 3, 3, true);
-    corridor(map, 5, 5, 7, 7, false);
+    generate(map);
     draw(map);
     return 0;
 }
