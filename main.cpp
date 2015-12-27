@@ -124,8 +124,8 @@ void generate(char map[X_MAX][Y_MAX])
     {
         int size_x = rand() % ROOM_SIZE + 1;
         int size_y = rand() % ROOM_SIZE + 1;
-        int start_x = rand() % (X_MAX - size_x);
-        int start_y = rand() % (Y_MAX - size_y);
+        int start_x = rand() % (X_MAX - size_x - 2) + 1;
+        int start_y = rand() % (Y_MAX - size_y - 2) + 1;
         room(map, start_x, start_y, start_x + size_x, start_y + size_y);
         if(r > 0)
         {
