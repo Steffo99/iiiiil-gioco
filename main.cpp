@@ -16,6 +16,7 @@ void draw(char map[X_MAX][Y_MAX])
     }
 }
 
+//Funzioni per la generazione della mappa
 //Inizializza la mappa con spazi vuoti
 void init(char map[X_MAX][Y_MAX])
 {
@@ -27,6 +28,19 @@ void init(char map[X_MAX][Y_MAX])
         }
     }
 }
+
+//Crea una stanza quadrata
+void room(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y)
+{
+    for(int y=start_y; y<=end_y; y++)
+    {
+        for(int x=start_x; x<=end_x; x++)
+        {
+            map[x][y] = '.';
+        }
+    }
+}
+
 
 int main()
 {
