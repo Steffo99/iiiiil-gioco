@@ -7,6 +7,9 @@
 #define ROOMS 8
 #define ROOM_SIZE 7
 
+#define WALL 0xB2
+#define EMPTY 0xFF
+
 using namespace std;
 
 //Aggiorna la console con la situazione corrente del gioco.
@@ -29,7 +32,7 @@ void init(char map[X_MAX][Y_MAX])
     {
         for(int x=0; x<X_MAX; x++)
         {
-            map[x][y] = ' ';
+            map[x][y] = WALL;
         }
     }
 }
@@ -41,7 +44,7 @@ void room(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y
     {
         for(int x=start_x; x<=end_x; x++)
         {
-            map[x][y] = '.';
+            map[x][y] = EMPTY;
         }
     }
 }
@@ -55,28 +58,28 @@ void corridor(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int e
         {
             for(int y=end_y; y<=start_y; y++)
             {
-                map[start_x][y] = '.';
+                map[start_x][y] = EMPTY;
             }
         }
         else
         {
             for(int y=start_y; y<=end_y; y++)
             {
-                map[start_x][y] = '.';
+                map[start_x][y] = EMPTY;
             }
         }
         if(start_x > end_x)
         {
             for(int x=end_x; x<=start_x; x++)
             {
-                map[x][end_y] = '.';
+                map[x][end_y] = EMPTY;
             }
         }
         else
         {
             for(int x=start_x; x<=end_x; x++)
             {
-                map[x][end_y] = '.';
+                map[x][end_y] = EMPTY;
             }
         }
     }
@@ -86,28 +89,28 @@ void corridor(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int e
         {
             for(int x=end_x; x<=start_x; x++)
             {
-                map[x][start_y] = '.';
+                map[x][start_y] = EMPTY;
             }
         }
         else
         {
             for(int x=start_x; x<=end_x; x++)
             {
-                map[x][start_y] = '.';
+                map[x][start_y] = EMPTY;
             }
         }
         if(start_y > end_y)
         {
             for(int y=end_y; y<=start_y; y++)
             {
-                map[end_x][y] = '.';
+                map[end_x][y] = EMPTY;
             }
         }
         else
         {
             for(int y=start_y; y<=end_y; y++)
             {
-                map[end_x][y] = '.';
+                map[end_x][y] = EMPTY;
             }
         }
     }
