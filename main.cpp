@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <time.h>
+#include <conio.h>
 
 #define X_MAX 80
 #define Y_MAX 23
@@ -9,11 +10,65 @@
 
 #define WALL 0xB2
 #define EMPTY 0xFF
+#define PLAYER 0x02
 
 using namespace std;
 
+void move(unsigned char map[X_MAX][Y_MAX], int player[2])
+{
+    int player_x = player[0];
+    int player_y = player[1];
+    bool waiting = true;
+    while(waiting)
+    {
+        if(getch() == 224)
+        {
+            switch(getch())
+            {
+                case 72: //Freccia su
+                    if(map[player_x][player_y-1] == EMPTY)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y-1] = PLAYER;
+                        player_y--;
+                        waiting = false;
+                    }
+                    break;
+                case 80: //Freccia giù
+                    if(map[player_x][player_y+1] == EMPTY)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y+1] = PLAYER;
+                        player_y++;
+                        waiting = false;
+                    }
+                    break;
+                case 75: //Freccia sinistra
+                    if(map[player_x-1][player_y] == EMPTY)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x-1][player_y] = PLAYER;
+                        player_x--;
+                        waiting = false;
+                    }
+                    break;
+                case 77: //Freccia destra
+                    if(map[player_x+1][player_y] == EMPTY)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x+1][player_y] = PLAYER;
+                        player_x++;
+                        waiting = false;
+                    }
+                    break;
+            }
+        }
+    }
+    player[0] = player_x;
+    player[1] = player_y;
+}
 //Aggiorna la console con la situazione corrente del gioco.
-void draw(char map[X_MAX][Y_MAX])
+void draw(unsigned char map[X_MAX][Y_MAX])
 {
     for(int y=0; y<Y_MAX; y++)
     {
@@ -26,7 +81,7 @@ void draw(char map[X_MAX][Y_MAX])
 
 //Funzioni per la generazione della mappa
 //Inizializza la mappa con spazi vuoti
-void init(char map[X_MAX][Y_MAX])
+void init(unsigned char map[X_MAX][Y_MAX])
 {
     for(int y=0; y<Y_MAX; y++)
     {
@@ -38,7 +93,7 @@ void init(char map[X_MAX][Y_MAX])
 }
 
 //Crea una stanza quadrata
-void room(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y)
+void room(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y)
 {
     for(int y=start_y; y<=end_y; y++)
     {
@@ -50,7 +105,7 @@ void room(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y
 }
 
 //Crea un corridoio che connetta due punti
-void corridor(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y, bool verticale)
+void corridor(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y, bool verticale)
 {
     if(verticale)
     {
@@ -116,7 +171,7 @@ void corridor(char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int e
     }
 }
 
-void generate(char map[X_MAX][Y_MAX])
+void generate(unsigned char map[X_MAX][Y_MAX])
 {
     int corridor_x;
     int corridor_y;
@@ -140,10 +195,16 @@ void generate(char map[X_MAX][Y_MAX])
 
 int main()
 {
-    char map[X_MAX][Y_MAX]; //Mappa del gioco
-    srand(time(NULL)); //TODO: Rendere il seed modificabile
+    unsigned char map[X_MAX][Y_MAX]; //Mappa del gioco
+    int player[2]; //Coordinate di posizione del giocatore per trovarlo più in fretta
+    srand(0); //TODO: Rendere il seed modificabile
     init(map);
     generate(map);
     draw(map);
+    while(true)
+    {
+        move(map, player);
+        draw(map);
+    }
     return 0;
 }
