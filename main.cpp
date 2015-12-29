@@ -2,6 +2,7 @@
 #include <random>
 #include <time.h>
 #include <conio.h>
+#include <stdlib.h>
 
 #define X_MAX 80
 #define Y_MAX 23
@@ -70,6 +71,7 @@ void move(unsigned char map[X_MAX][Y_MAX], int player[2])
 //Aggiorna la console con la situazione corrente del gioco.
 void draw(unsigned char map[X_MAX][Y_MAX])
 {
+    system("cls");
     for(int y=0; y<Y_MAX; y++)
     {
         for(int x=0; x<X_MAX; x++)
@@ -196,8 +198,9 @@ void generate(unsigned char map[X_MAX][Y_MAX])
 int main()
 {
     unsigned char map[X_MAX][Y_MAX]; //Mappa del gioco
-    int player[2]; //Coordinate di posizione del giocatore per trovarlo più in fretta
-    srand(0); //TODO: Rendere il seed modificabile
+    int player[2] = {1, 8}; //Mettiamo il giocatore da qualche parte, in attesa dell'algoritmo...
+    map[1][8] = PLAYER;
+    srand(0); //TODO: Rendere il seed modificabile...?
     init(map);
     generate(map);
     draw(map);
