@@ -20,6 +20,7 @@ void move(unsigned char map[X_MAX][Y_MAX], int player[2])
     int player_x = player[0];
     int player_y = player[1];
     bool waiting = true;
+    //Rileva i tasti freccia
     while(waiting)
     {
         if(getch() == 224)
@@ -71,6 +72,7 @@ void move(unsigned char map[X_MAX][Y_MAX], int player[2])
 //Aggiorna la console con la situazione corrente del gioco.
 void draw(unsigned char map[X_MAX][Y_MAX])
 {
+    //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
     system("cls");
     for(int y=0; y<Y_MAX; y++)
     {
@@ -185,6 +187,7 @@ void generate(unsigned char map[X_MAX][Y_MAX], int player[2])
         int start_x = rand() % (X_MAX - size_x - 2) + 1;
         int start_y = rand() % (Y_MAX - size_y - 2) + 1;
         room(map, start_x, start_y, start_x + size_x, start_y + size_y);
+        //Se non è la prima stanza, crea un corridoio che connetta quella appena generata con quella precedente
         if(r > 0)
         {
             int link_x = rand() % size_x + 1 + start_x;
@@ -193,6 +196,7 @@ void generate(unsigned char map[X_MAX][Y_MAX], int player[2])
         }
         corridor_x = rand() % size_x + start_x;
         corridor_y = rand() % size_y + start_y;
+        //Posiziona il giocatore se è l'ultima stanza
         if(r == ROOMS - 1)
         {
             player[0] = corridor_x;
@@ -210,6 +214,7 @@ int main()
     init(map);
     generate(map, player);
     draw(map);
+    //Ciclo principale del gioco
     while(true)
     {
         move(map, player);
