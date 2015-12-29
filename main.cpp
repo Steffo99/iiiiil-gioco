@@ -173,10 +173,11 @@ void corridor(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end
     }
 }
 
-void generate(unsigned char map[X_MAX][Y_MAX])
+void generate(unsigned char map[X_MAX][Y_MAX], int player[2])
 {
     int corridor_x;
     int corridor_y;
+    //Creazione delle stanze
     for(int r=0; r<ROOMS; r++)
     {
         int size_x = rand() % ROOM_SIZE + 1;
@@ -192,17 +193,22 @@ void generate(unsigned char map[X_MAX][Y_MAX])
         }
         corridor_x = rand() % size_x + start_x;
         corridor_y = rand() % size_y + start_y;
+        if(r == ROOMS - 1)
+        {
+            player[0] = corridor_x;
+            player[1] = corridor_y;
+            map[corridor_x][corridor_y] = PLAYER;
+        }
     }
 }
 
 int main()
 {
     unsigned char map[X_MAX][Y_MAX]; //Mappa del gioco
-    int player[2] = {1, 8}; //Mettiamo il giocatore da qualche parte, in attesa dell'algoritmo...
-    map[1][8] = PLAYER;
-    srand(0); //TODO: Rendere il seed modificabile...?
+    int player[2];
+    srand(time(NULL)); //TODO: Rendere il seed modificabile...?
     init(map);
-    generate(map);
+    generate(map, player);
     draw(map);
     while(true)
     {
