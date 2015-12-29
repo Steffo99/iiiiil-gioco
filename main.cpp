@@ -8,12 +8,26 @@
 #define Y_MAX 23
 #define ROOMS 8
 #define ROOM_SIZE 7
+#define ENEMIES_IN_LEVEL 5
 
 #define WALL 0xB2
 #define EMPTY 0xFF
 #define PLAYER 0x02
+#define ENEMY 'X'
 
 using namespace std;
+
+//Classe dei nemici
+class Enemy
+{
+    public:
+        int x;
+        int y;
+        void move()
+        {
+            //Qui dopo devo metterci il movimento...
+        }
+};
 
 void move(unsigned char map[X_MAX][Y_MAX], int player[2])
 {
@@ -175,7 +189,7 @@ void corridor(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end
     }
 }
 
-void generate(unsigned char map[X_MAX][Y_MAX], int player[2])
+void generate(unsigned char map[X_MAX][Y_MAX], int player[2], Enemy* list[ENEMIES_IN_LEVEL])
 {
     int corridor_x;
     int corridor_y;
@@ -204,15 +218,33 @@ void generate(unsigned char map[X_MAX][Y_MAX], int player[2])
             map[corridor_x][corridor_y] = PLAYER;
         }
     }
+    for(int e=0; e<ENEMIES_IN_LEVEL; e++)
+    {
+        while(true)
+        {
+            int x = rand() % (X_MAX - 1) + 1;
+            int y = rand() % (Y_MAX - 1) + 1;
+            if(map[x][y] == EMPTY)
+            {
+                map[x][y] = ENEMY;
+                Enemy* created = new Enemy();
+                created->x = x;
+                created->y = y;
+                list[e] = created;
+                break;
+            }
+        }
+    }
 }
 
 int main()
 {
-    unsigned char map[X_MAX][Y_MAX]; //Mappa del gioco
+    unsigned char map[X_MAX][Y_MAX]; //Mappa del gioco, da usare SOLO per la rappresentazione grafica e per il movimento, non anche per la logica...
     int player[2];
-    srand(time(NULL)); //TODO: Rendere il seed modificabile...?
+    Enemy* list[ENEMIES_IN_LEVEL];
+    srand(0); //TODO: Rendere il seed modificabile...?
     init(map);
-    generate(map, player);
+    generate(map, player, list);
     draw(map);
     //Ciclo principale del gioco
     while(true)
