@@ -17,6 +17,9 @@
 
 using namespace std;
 
+//Mappa del gioco
+unsigned char map[X_MAX][Y_MAX];
+
 //Classe dei nemici
 class Enemy
 {
@@ -25,11 +28,12 @@ class Enemy
         int y;
         void move()
         {
-            //Qui dopo devo metterci il movimento...
+            //Se non hai il giocatore accanto, muoviti in una direzione casuale.
         }
 };
 
-void move(unsigned char map[X_MAX][Y_MAX], int player[2])
+//Fai muovere il giocatore
+void move(int player[2])
 {
     int player_x = player[0];
     int player_y = player[1];
@@ -84,7 +88,7 @@ void move(unsigned char map[X_MAX][Y_MAX], int player[2])
     player[1] = player_y;
 }
 //Aggiorna la console con la situazione corrente del gioco.
-void draw(unsigned char map[X_MAX][Y_MAX])
+void draw()
 {
     //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
     system("cls");
@@ -99,7 +103,7 @@ void draw(unsigned char map[X_MAX][Y_MAX])
 
 //Funzioni per la generazione della mappa
 //Inizializza la mappa con spazi vuoti
-void init(unsigned char map[X_MAX][Y_MAX])
+void init()
 {
     for(int y=0; y<Y_MAX; y++)
     {
@@ -111,7 +115,7 @@ void init(unsigned char map[X_MAX][Y_MAX])
 }
 
 //Crea una stanza quadrata
-void room(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y)
+void room(int start_x, int start_y, int end_x, int end_y)
 {
     for(int y=start_y; y<=end_y; y++)
     {
@@ -123,7 +127,7 @@ void room(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, 
 }
 
 //Crea un corridoio che connetta due punti
-void corridor(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end_x, int end_y, bool verticale)
+void corridor(int start_x, int start_y, int end_x, int end_y, bool verticale)
 {
     if(verticale)
     {
@@ -189,7 +193,7 @@ void corridor(unsigned char map[X_MAX][Y_MAX], int start_x, int start_y, int end
     }
 }
 
-void generate(unsigned char map[X_MAX][Y_MAX], int player[2], Enemy* list[ENEMIES_IN_LEVEL])
+void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
 {
     int corridor_x;
     int corridor_y;
@@ -200,13 +204,13 @@ void generate(unsigned char map[X_MAX][Y_MAX], int player[2], Enemy* list[ENEMIE
         int size_y = rand() % ROOM_SIZE + 1;
         int start_x = rand() % (X_MAX - size_x - 2) + 1;
         int start_y = rand() % (Y_MAX - size_y - 2) + 1;
-        room(map, start_x, start_y, start_x + size_x, start_y + size_y);
+        room(start_x, start_y, start_x + size_x, start_y + size_y);
         //Se non è la prima stanza, crea un corridoio che connetta quella appena generata con quella precedente
         if(r > 0)
         {
             int link_x = rand() % size_x + 1 + start_x;
             int link_y = rand() % size_y + 1 + start_y;
-            corridor(map, link_x, link_y, corridor_x, corridor_y, rand() % 2);
+            corridor(link_x, link_y, corridor_x, corridor_y, rand() % 2);
         }
         corridor_x = rand() % size_x + start_x;
         corridor_y = rand() % size_y + start_y;
@@ -237,20 +241,29 @@ void generate(unsigned char map[X_MAX][Y_MAX], int player[2], Enemy* list[ENEMIE
     }
 }
 
+//Processa il resto di un turno, dopo il movimento del giocatore.
+void tick(Enemy* list[ENEMIES_IN_LEVEL])
+{
+    for(int e=0; e<ENEMIES_IN_LEVEL; e++)
+    {
+        list[e]->move();
+    }
+}
+
 int main()
 {
-    unsigned char map[X_MAX][Y_MAX]; //Mappa del gioco, da usare SOLO per la rappresentazione grafica e per il movimento, non anche per la logica...
     int player[2];
     Enemy* list[ENEMIES_IN_LEVEL];
     srand(0); //TODO: Rendere il seed modificabile...?
-    init(map);
-    generate(map, player, list);
-    draw(map);
+    init();
+    generate(player, list);
+    draw();
     //Ciclo principale del gioco
     while(true)
     {
-        move(map, player);
-        draw(map);
+        move(player);
+        tick(list);
+        draw();
     }
     return 0;
 }
