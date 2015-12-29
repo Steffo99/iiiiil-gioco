@@ -45,7 +45,6 @@ class Enemy
                         case 0: //Sinistra
                             if(map[x-1][y] == EMPTY)
                             {
-                                cout << "S";
                                 map[x][y] = EMPTY;
                                 map[x-1][y] = ENEMY;
                                 x--;
@@ -55,7 +54,6 @@ class Enemy
                         case 1: //Destra
                             if(map[x+1][y] == EMPTY)
                             {
-                                cout << "D";
                                 map[x][y] = EMPTY;
                                 map[x+1][y] = ENEMY;
                                 x++;
@@ -65,7 +63,6 @@ class Enemy
                         case 2: //Su
                             if(map[x][y-1] == EMPTY)
                             {
-                                cout << "U";
                                 map[x][y] = EMPTY;
                                 map[x][y-1] = ENEMY;
                                 y--;
@@ -75,7 +72,6 @@ class Enemy
                         case 3: //Giù
                             if(map[x][y+1] == EMPTY)
                             {
-                                cout << "G";
                                 map[x][y] = EMPTY;
                                 map[x][y+1] = ENEMY;
                                 y++;
@@ -302,7 +298,6 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
 {
     for(int e=0; e<ENEMIES_IN_LEVEL; e++)
     {
-        cout << "|" << list[e];
         list[e]->move();
     }
 }
