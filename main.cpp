@@ -28,7 +28,63 @@ class Enemy
         int y;
         void move()
         {
-            //Se non hai il giocatore accanto, muoviti in una direzione casuale.
+            //Se intorno c'è il giocatore
+            if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
+            {
+                //ATTACCO!
+            }
+            else
+            {
+                //Muoviti in una direzione casuale
+                bool moving = true;
+                while(moving)
+                {
+                    int direction = rand() % 4;
+                    switch(direction)
+                    {
+                        case 0: //Sinistra
+                            if(map[x-1][y] == EMPTY)
+                            {
+                                cout << "S";
+                                map[x][y] = EMPTY;
+                                map[x-1][y] = ENEMY;
+                                x--;
+                                moving = false;
+                            }
+                            break;
+                        case 1: //Destra
+                            if(map[x+1][y] == EMPTY)
+                            {
+                                cout << "D";
+                                map[x][y] = EMPTY;
+                                map[x+1][y] = ENEMY;
+                                x++;
+                                moving = false;
+                            }
+                            break;
+                        case 2: //Su
+                            if(map[x][y-1] == EMPTY)
+                            {
+                                cout << "U";
+                                map[x][y] = EMPTY;
+                                map[x][y-1] = ENEMY;
+                                y--;
+                                moving = false;
+                            }
+                            break;
+                        case 3: //Giù
+                            if(map[x][y+1] == EMPTY)
+                            {
+                                cout << "G";
+                                map[x][y] = EMPTY;
+                                map[x][y+1] = ENEMY;
+                                y++;
+                                moving = false;
+                            }
+                            break;
+                    }
+                }
+            }
         }
 };
 
@@ -246,6 +302,7 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
 {
     for(int e=0; e<ENEMIES_IN_LEVEL; e++)
     {
+        cout << "|" << list[e];
         list[e]->move();
     }
 }
