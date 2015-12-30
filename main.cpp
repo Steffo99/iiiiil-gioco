@@ -93,7 +93,8 @@ void move(int player[2])
     //Rileva i tasti freccia
     while(waiting)
     {
-        if(getch() == 224)
+        unsigned char input = getch();
+        if(input == 224)
         {
             switch(getch())
             {
@@ -134,6 +135,11 @@ void move(int player[2])
                     }
                     break;
             }
+        }
+        else if(input == 115) //S
+        {
+            //Salta un turno
+            waiting = false;
         }
     }
     player[0] = player_x;
