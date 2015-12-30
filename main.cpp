@@ -14,11 +14,15 @@
 #define EMPTY 0xFF
 #define PLAYER 0x02
 #define ENEMY 'X'
+#define EXIT '>'
 
 using namespace std;
 
 //Mappa del gioco
 unsigned char map[X_MAX][Y_MAX];
+
+//Numero del piano raggiunto dal giocatore
+int depth = 1;
 
 //Classe dei nemici
 class Enemy
@@ -85,7 +89,7 @@ class Enemy
 };
 
 //Fai muovere il giocatore
-void move(int player[2])
+int move(int player[2])
 {
     int player_x = player[0];
     int player_y = player[1];
@@ -106,6 +110,10 @@ void move(int player[2])
                         player_y--;
                         waiting = false;
                     }
+                    else if(map[player_x][player_y-1] == EXIT)
+                    {
+                        return 1;
+                    }
                     break;
                 case 80: //Freccia giù
                     if(map[player_x][player_y+1] == EMPTY)
@@ -114,6 +122,10 @@ void move(int player[2])
                         map[player_x][player_y+1] = PLAYER;
                         player_y++;
                         waiting = false;
+                    }
+                    else if(map[player_x][player_y+1] == EXIT)
+                    {
+                        return 1;
                     }
                     break;
                 case 75: //Freccia sinistra
@@ -124,6 +136,10 @@ void move(int player[2])
                         player_x--;
                         waiting = false;
                     }
+                    else if(map[player_x-1][player_y] == EXIT)
+                    {
+                        return 1;
+                    }
                     break;
                 case 77: //Freccia destra
                     if(map[player_x+1][player_y] == EMPTY)
@@ -132,6 +148,10 @@ void move(int player[2])
                         map[player_x+1][player_y] = PLAYER;
                         player_x++;
                         waiting = false;
+                    }
+                    else if(map[player_x+1][player_y] == EXIT)
+                    {
+                        return 1;
                     }
                     break;
             }
@@ -144,6 +164,7 @@ void move(int player[2])
     }
     player[0] = player_x;
     player[1] = player_y;
+    return 0;
 }
 //Aggiorna la console con la situazione corrente del gioco.
 void draw()
@@ -157,6 +178,7 @@ void draw()
             cout << map[x][y];
         }
     }
+    cout << "Piano " << depth;
 }
 
 //Funzioni per la generazione della mappa
@@ -280,6 +302,7 @@ void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
             map[corridor_x][corridor_y] = PLAYER;
         }
     }
+    //Posizionamento nemici
     for(int e=0; e<ENEMIES_IN_LEVEL; e++)
     {
         while(true)
@@ -297,6 +320,18 @@ void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
             }
         }
     }
+    //Posizionamento uscita
+    while(true)
+    {
+        int x = rand() % (X_MAX - 1) + 1;
+        int y = rand() % (Y_MAX - 1) + 1;
+        if(map[x][y] == EMPTY)
+        {
+            map[x][y] = EXIT;
+            break;
+        }
+    }
+
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
@@ -311,17 +346,26 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
 int main()
 {
     int player[2];
-    Enemy* list[ENEMIES_IN_LEVEL];
+    Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
     srand(0); //TODO: Rendere il seed modificabile...?
-    init();
-    generate(player, list);
-    draw();
-    //Ciclo principale del gioco
+    //Ciclo del gioco
     while(true)
     {
-        move(player);
-        tick(list);
+        init();
+        generate(player, list);
         draw();
+        //Ciclo di un livello
+        while(true)
+        {
+            int trigger = move(player);
+            if(trigger == 1) //Uscita toccata
+            {
+                break;
+            }
+            tick(list);
+            draw();
+        }
+        depth++;
     }
     return 0;
 }
