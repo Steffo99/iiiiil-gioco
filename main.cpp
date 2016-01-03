@@ -27,115 +27,17 @@ using namespace std;
 //Mappa del gioco
 unsigned char map[X_MAX][Y_MAX];
 
-//Tutta sta roba non si potrebbe mettere in una classe giocatore o qualcosa del genere?
 //Numero del piano raggiunto dal giocatore
 int depth = 1;
-
-//Salute del giocatore
-int hp = HP_MAX;
 
 //Inventario del giocatore
 int pozioni_vita_piccole = 3;
 int pozioni_vita_medie = 2;
 int pozioni_vita_grandi = 1;
 
-//Cura il giocatore di x
-void heal(int x)
-{
-    if(hp + x > HP_MAX)
-    {
-        hp = HP_MAX;
-    }
-    else
-    {
-        hp += x;
-    }
-}
-
-//Visualizza l'inventario
-void inventory()
-{
-    system("cls");
-    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/" << HP_MAX << "\n";
-    for(int i = 0; i < X_MAX; i++)
-    {
-        cout << (char) DOUBLELINE;
-    }
-    //Anche qui, credo si possa migliorare qualcosa...
-    if(pozioni_vita_piccole > 0)
-    {
-        cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
-    }
-    else
-    {
-        cout << '\n';
-    }
-    if(pozioni_vita_medie > 0)
-    {
-        cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
-    }
-    else
-    {
-        cout << '\n';
-    }
-    if(pozioni_vita_grandi > 0)
-    {
-        cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
-    }
-    else
-    {
-        cout << '\n';
-    }
-    //Selezione dell'oggetto da usare.
-    cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\n";
-    while(true)
-    {
-        //Effetto degli oggetti
-        unsigned char selezione = getch();
-        if(selezione == 112) //p
-        {
-            if(pozioni_vita_piccole > 0)
-            {
-                pozioni_vita_piccole--;
-                heal(10);
-                break;
-            }
-        }
-        else if(selezione == 110) //n
-        {
-            if(pozioni_vita_medie > 0)
-            {
-                pozioni_vita_medie--;
-                heal(20);
-                break;
-            }
-        }
-        else if(selezione == 109) //m
-        {
-            if(pozioni_vita_grandi > 0)
-            {
-                pozioni_vita_grandi--;
-                heal(50);
-                break;
-            }
-        }
-    }
-}
-
-//Aggiorna la console con la situazione corrente del gioco.
-void draw()
-{
-    //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
-    system("cls");
-    for(int y=0; y<Y_MAX; y++)
-    {
-        for(int x=0; x<X_MAX; x++)
-        {
-            cout << map[x][y];
-        }
-    }
-    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/" << HP_MAX << '\n';
-}
+//Devo mettere due volte draw perchè ha bisogno della classe Player, a cui però serve la funzione draw. Idem per l'inventario...
+void draw();
+void inventory();
 
 //Classe entità generica, sia nemico sia giocatore
 class Entity
@@ -143,6 +45,7 @@ class Entity
     public:
         int x;
         int y;
+        int hp;
         int move();
 };
 
@@ -150,6 +53,7 @@ class Entity
 class Player : public Entity
 {
     public:
+        int hp = HP_MAX;
         int move()
         {
             bool waiting = true;
@@ -338,7 +242,7 @@ class Enemy : public Entity
             if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
             {
                 //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
-                hp--;
+                player.hp--;
             }
             else
             {
@@ -390,6 +294,104 @@ class Enemy : public Entity
             }
         }
 };
+
+//Cura il giocatore di x
+void heal(int x)
+{
+    if(player.hp + x > HP_MAX)
+    {
+        player.hp = HP_MAX;
+    }
+    else
+    {
+        player.hp += x;
+    }
+}
+
+//Aggiorna la console con la situazione corrente del gioco.
+void draw()
+{
+    //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
+    system("cls");
+    for(int y=0; y<Y_MAX; y++)
+    {
+        for(int x=0; x<X_MAX; x++)
+        {
+            cout << map[x][y];
+        }
+    }
+    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << '\n';
+}
+
+//Visualizza l'inventario
+void inventory()
+{
+    system("cls");
+    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << "\n";
+    for(int i = 0; i < X_MAX; i++)
+    {
+        cout << (char) DOUBLELINE;
+    }
+    //Anche qui, credo si possa migliorare qualcosa...
+    if(pozioni_vita_piccole > 0)
+    {
+        cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
+    }
+    else
+    {
+        cout << '\n';
+    }
+    if(pozioni_vita_medie > 0)
+    {
+        cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
+    }
+    else
+    {
+        cout << '\n';
+    }
+    if(pozioni_vita_grandi > 0)
+    {
+        cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
+    }
+    else
+    {
+        cout << '\n';
+    }
+    //Selezione dell'oggetto da usare.
+    cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\n";
+    while(true)
+    {
+        //Effetto degli oggetti
+        unsigned char selezione = getch();
+        if(selezione == 112) //p
+        {
+            if(pozioni_vita_piccole > 0)
+            {
+                pozioni_vita_piccole--;
+                heal(10);
+                break;
+            }
+        }
+        else if(selezione == 110) //n
+        {
+            if(pozioni_vita_medie > 0)
+            {
+                pozioni_vita_medie--;
+                heal(20);
+                break;
+            }
+        }
+        else if(selezione == 109) //m
+        {
+            if(pozioni_vita_grandi > 0)
+            {
+                pozioni_vita_grandi--;
+                heal(50);
+                break;
+            }
+        }
+    }
+}
 
 //Funzioni per la generazione della mappa
 //Inizializza la mappa con spazi vuoti
