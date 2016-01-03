@@ -30,11 +30,6 @@ unsigned char map[X_MAX][Y_MAX];
 //Numero del piano raggiunto dal giocatore
 int depth = 1;
 
-//Inventario del giocatore
-int pozioni_vita_piccole = 3;
-int pozioni_vita_medie = 2;
-int pozioni_vita_grandi = 1;
-
 //Devo mettere due volte draw perchè ha bisogno della classe Player, a cui però serve la funzione draw. Idem per l'inventario...
 void draw();
 void inventory();
@@ -45,15 +40,15 @@ class Entity
     public:
         int x;
         int y;
-        int hp;
-        int hp_max;
+        int hp = HP_MAX;
+        int hp_max = HP_MAX;
         int move();
         //Cura di x l'entità
         void heal(int x)
         {
-            if(hp + x > HP_MAX)
+            if(hp + x > hp_max)
             {
-                hp = HP_MAX;
+                hp = hp_max;
             }
             else
             {
@@ -66,8 +61,9 @@ class Entity
 class Player : public Entity
 {
     public:
-        int hp = HP_MAX;
-        int hp_max = HP_MAX;
+        int pozioni_vita_piccole = 3;
+        int pozioni_vita_medie = 2;
+        int pozioni_vita_grandi = 1;
         int move()
         {
             bool waiting = true;
@@ -181,7 +177,7 @@ class Enemy : public Entity
             if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
             {
                 //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
-                hp -= rand() % 5 + 1;
+                player.hp -= rand() % 5 + 1;
             }
             else
             {
@@ -259,25 +255,25 @@ void inventory()
         cout << (char) DOUBLELINE;
     }
     //Anche qui, credo si possa migliorare qualcosa...
-    if(pozioni_vita_piccole > 0)
+    if(player.pozioni_vita_piccole > 0)
     {
-        cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
+        cout << player.pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
     }
     else
     {
         cout << '\n';
     }
-    if(pozioni_vita_medie > 0)
+    if(player.pozioni_vita_medie > 0)
     {
-        cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
+        cout << player.pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
     }
     else
     {
         cout << '\n';
     }
-    if(pozioni_vita_grandi > 0)
+    if(player.pozioni_vita_grandi > 0)
     {
-        cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
+        cout << player.pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
     }
     else
     {
@@ -291,27 +287,27 @@ void inventory()
         unsigned char selezione = getch();
         if(selezione == 112) //p
         {
-            if(pozioni_vita_piccole > 0)
+            if(player.pozioni_vita_piccole > 0)
             {
-                pozioni_vita_piccole--;
+                player.pozioni_vita_piccole--;
                 player.heal(10);
                 break;
             }
         }
         else if(selezione == 110) //n
         {
-            if(pozioni_vita_medie > 0)
+            if(player.pozioni_vita_medie > 0)
             {
-                pozioni_vita_medie--;
+                player.pozioni_vita_medie--;
                 player.heal(20);
                 break;
             }
         }
         else if(selezione == 109) //m
         {
-            if(pozioni_vita_grandi > 0)
+            if(player.pozioni_vita_grandi > 0)
             {
-                pozioni_vita_grandi--;
+                player.pozioni_vita_grandi--;
                 player.heal(50);
                 break;
             }
