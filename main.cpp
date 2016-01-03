@@ -27,31 +27,170 @@ using namespace std;
 //Mappa del gioco
 unsigned char map[X_MAX][Y_MAX];
 
-//Tutta sta roba non si potrebbe mettere in una classe giocatore o qualcosa del genere?
 //Numero del piano raggiunto dal giocatore
 int depth = 1;
 
-//Salute del giocatore
-int hp = HP_MAX;
+//Devo mettere due volte draw perchè ha bisogno della classe Player, a cui però serve la funzione draw. Idem per l'inventario...
+void draw();
+void inventory();
 
-//Inventario del giocatore
-int pozioni_vita_piccole = 3;
-int pozioni_vita_medie = 2;
-int pozioni_vita_grandi = 1;
-
-//Classe dei nemici
-class Enemy
+//Classe entità generica, sia nemico sia giocatore
+class Entity
 {
     public:
         int x;
         int y;
-        void move()
+        int hp = HP_MAX;
+        int hp_max = HP_MAX;
+        int move();
+        //Cura di x l'entità
+        void heal(int x)
+        {
+            if(hp + x > hp_max)
+            {
+                hp = hp_max;
+            }
+            else
+            {
+                hp += x;
+            }
+        }
+        //Danneggia di x l'entità
+        void damage(int x)
+        {
+            if(hp - x < 0)
+            {
+                //entità zombi
+                hp = 0;
+            }
+            else
+            {
+                hp -= x;
+            }
+        }
+};
+
+//Classe del giocatore
+class Player : public Entity
+{
+    public:
+        int pozioni_vita_piccole = 3;
+        int pozioni_vita_medie = 2;
+        int pozioni_vita_grandi = 1;
+        int move()
+        {
+            bool waiting = true;
+            unsigned char* starting = &map[x][y]; //Casella attuale
+            unsigned char* target; //Bersaglio del movimento
+            //Rileva i tasti freccia
+            while(waiting)
+            {
+                unsigned char input = getch();
+                short int dir = 0; //Direzione del movimento, per modificare x e y.
+                if(input == 224)
+                {
+                    switch(getch())
+                    {
+                        case 72: //Freccia su, 1
+                            target = &map[x][y-1];
+                            dir = 1;
+                            break;
+                        case 80: //Freccia giù, 2
+                            target = &map[x][y+1];
+                            dir = 2;
+                            break;
+                        case 75: //Freccia sinistra, 3
+                            target = &map[x-1][y];
+                            dir = 3;
+                            break;
+                        case 77: //Freccia destra, 4
+                            target = &map[x+1][y];
+                            dir = 4;
+                            break;
+                        //Aggiungere gestione del caso che non sia una delle quattro frecce
+                    }
+                    //Muoviti e agisci!
+                    if(*target == EMPTY)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        waiting = false;
+                    }
+                    else if(*target == ITEM_SMALL_POTION)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        pozioni_vita_piccole++;
+                        waiting = false;
+                    }
+                    else if(*target == ITEM_MEDIUM_POTION)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        pozioni_vita_medie++;
+                        waiting = false;
+                    }
+                    else if(*target == ITEM_BIG_POTION)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        pozioni_vita_grandi++;
+                        waiting = false;
+                    }
+                    else if(*target == EXIT)
+                    {
+                        return 1;
+                    }
+                }
+                else if(input == 's') //S
+                {
+                    //Salta un turno
+                    waiting = false;
+                }
+                else if(input == 'i') //I
+                {
+                    //Apri l'inventario
+                    inventory();
+                    //Torna alla mappa
+                    draw();
+                }
+                //Se ti sei mosso, controlla in che direzione e aggiorna correttamente la x e la y.
+                //Non mi veniva in mente un modo per farlo meglio.
+                if(!waiting)
+                {
+                    if(dir == 1)
+                    {
+                        y--;
+                    }
+                    else if(dir == 2)
+                    {
+                        y++;
+                    }
+                    else if(dir == 3)
+                    {
+                        x--;
+                    }
+                    else if(dir == 4)
+                    {
+                        x++;
+                    }
+                }
+            }
+            return 0;
+        }
+} player;
+
+//Classe dei nemici
+class Enemy : public Entity
+{
+    public:
+        int move()
         {
             //Se intorno c'è il giocatore
             if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
             {
                 //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
-                hp--;
+                player.damage(rand() % 5 + 1);
             }
             else
             {
@@ -104,48 +243,50 @@ class Enemy
         }
 };
 
-//Cura il giocatore di x
-void heal(int x)
+//Aggiorna la console con la situazione corrente del gioco.
+void draw()
 {
-    if(hp + x > HP_MAX)
+    //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
+    system("cls");
+    for(int y=0; y<Y_MAX; y++)
     {
-        hp = HP_MAX;
+        for(int x=0; x<X_MAX; x++)
+        {
+            cout << map[x][y];
+        }
     }
-    else
-    {
-        hp += x;
-    }
+    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << ' ' << player.x << '|' << player.y << '\n';
 }
 
 //Visualizza l'inventario
 void inventory()
 {
     system("cls");
-    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/" << HP_MAX << "\n";
+    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << "\n";
     for(int i = 0; i < X_MAX; i++)
     {
         cout << (char) DOUBLELINE;
     }
     //Anche qui, credo si possa migliorare qualcosa...
-    if(pozioni_vita_piccole > 0)
+    if(player.pozioni_vita_piccole > 0)
     {
-        cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
+        cout << player.pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
     }
     else
     {
         cout << '\n';
     }
-    if(pozioni_vita_medie > 0)
+    if(player.pozioni_vita_medie > 0)
     {
-        cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
+        cout << player.pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
     }
     else
     {
         cout << '\n';
     }
-    if(pozioni_vita_grandi > 0)
+    if(player.pozioni_vita_grandi > 0)
     {
-        cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
+        cout << player.pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
     }
     else
     {
@@ -159,229 +300,32 @@ void inventory()
         unsigned char selezione = getch();
         if(selezione == 112) //p
         {
-            if(pozioni_vita_piccole > 0)
+            if(player.pozioni_vita_piccole > 0)
             {
-                pozioni_vita_piccole--;
-                heal(10);
+                player.pozioni_vita_piccole--;
+                player.heal(10);
                 break;
             }
         }
         else if(selezione == 110) //n
         {
-            if(pozioni_vita_medie > 0)
+            if(player.pozioni_vita_medie > 0)
             {
-                pozioni_vita_medie--;
-                heal(20);
+                player.pozioni_vita_medie--;
+                player.heal(20);
                 break;
             }
         }
         else if(selezione == 109) //m
         {
-            if(pozioni_vita_grandi > 0)
+            if(player.pozioni_vita_grandi > 0)
             {
-                pozioni_vita_grandi--;
-                heal(50);
+                player.pozioni_vita_grandi--;
+                player.heal(50);
                 break;
             }
         }
     }
-}
-
-//Aggiorna la console con la situazione corrente del gioco.
-void draw()
-{
-    //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
-    system("cls");
-    for(int y=0; y<Y_MAX; y++)
-    {
-        for(int x=0; x<X_MAX; x++)
-        {
-            cout << map[x][y];
-        }
-    }
-    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/" << HP_MAX << '\n';
-}
-
-//Fai muovere il giocatore
-int move(int player[2])
-{
-    int player_x = player[0];
-    int player_y = player[1];
-    bool waiting = true;
-    //Rileva i tasti freccia
-    while(waiting)
-    {
-        unsigned char input = getch();
-        if(input == 224)
-        {
-            switch(getch())
-            {
-                case 72: //Freccia su
-                    if(map[player_x][player_y-1] == EMPTY)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y-1] = PLAYER;
-                        player_y--;
-                        waiting = false;
-                    }
-                    else if(map[player_x][player_y-1] == ITEM_SMALL_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y-1] = PLAYER;
-                        player_y--;
-                        pozioni_vita_piccole++;
-                        waiting = false;
-                    }
-                    else if(map[player_x][player_y-1] == ITEM_MEDIUM_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y-1] = PLAYER;
-                        player_y--;
-                        pozioni_vita_medie++;
-                        waiting = false;
-                    }
-                    else if(map[player_x-1][player_y-1] == ITEM_BIG_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y-1] = PLAYER;
-                        player_y--;
-                        pozioni_vita_grandi++;
-                        waiting = false;
-                    }
-                    else if(map[player_x][player_y-1] == EXIT)
-                    {
-                        return 1;
-                    }
-                    break;
-                case 80: //Freccia giù
-                    if(map[player_x][player_y+1] == EMPTY)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y+1] = PLAYER;
-                        player_y++;
-                        waiting = false;
-                    }
-                    else if(map[player_x][player_y+1] == ITEM_SMALL_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y+1] = PLAYER;
-                        player_y++;
-                        pozioni_vita_piccole++;
-                        waiting = false;
-                    }
-                    else if(map[player_x][player_y+1] == ITEM_MEDIUM_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y+1] = PLAYER;
-                        player_y++;
-                        pozioni_vita_medie++;
-                        waiting = false;
-                    }
-                    else if(map[player_x-1][player_y] == ITEM_BIG_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x][player_y+1] = PLAYER;
-                        player_y++;
-                        pozioni_vita_grandi++;
-                        waiting = false;
-                    }
-                    else if(map[player_x][player_y+1] == EXIT)
-                    {
-                        return 1;
-                    }
-                    break;
-                case 75: //Freccia sinistra
-                    if(map[player_x-1][player_y] == EMPTY)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x-1][player_y] = PLAYER;
-                        player_x--;
-                        waiting = false;
-                    }
-                    else if(map[player_x-1][player_y] == ITEM_SMALL_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x-1][player_y] = PLAYER;
-                        player_x--;
-                        pozioni_vita_piccole++;
-                        waiting = false;
-                    }
-                    else if(map[player_x-1][player_y] == ITEM_MEDIUM_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x-1][player_y] = PLAYER;
-                        player_x--;
-                        pozioni_vita_medie++;
-                        waiting = false;
-                    }
-                    else if(map[player_x-1][player_y] == ITEM_BIG_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x-1][player_y] = PLAYER;
-                        player_x--;
-                        pozioni_vita_grandi++;
-                        waiting = false;
-                    }
-                    else if(map[player_x-1][player_y] == EXIT)
-                    {
-                        return 1;
-                    }
-                    break;
-                case 77: //Freccia destra
-                    if(map[player_x+1][player_y] == EMPTY)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x+1][player_y] = PLAYER;
-                        player_x++;
-                        waiting = false;
-                    }
-                    else if(map[player_x+1][player_y] == ITEM_SMALL_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x+1][player_y] = PLAYER;
-                        player_x++;
-                        pozioni_vita_piccole++;
-                        waiting = false;
-                    }
-                    else if(map[player_x+1][player_y] == ITEM_MEDIUM_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x+1][player_y] = PLAYER;
-                        player_x++;
-                        pozioni_vita_medie++;
-                        waiting = false;
-                    }
-                    else if(map[player_x+1][player_y] == ITEM_BIG_POTION)
-                    {
-                        map[player_x][player_y] = EMPTY;
-                        map[player_x+1][player_y] = PLAYER;
-                        player_x++;
-                        pozioni_vita_grandi++;
-                        waiting = false;
-                    }
-                    else if(map[player_x+1][player_y] == EXIT)
-                    {
-                        return 1;
-                    }
-                    break;
-            }
-        }
-        else if(input == 's') //S
-        {
-            //Salta un turno
-            waiting = false;
-        }
-        else if(input == 'i') //I
-        {
-            //Apri l'inventario
-            inventory();
-            //Torna alla mappa
-            draw();
-        }
-    }
-    player[0] = player_x;
-    player[1] = player_y;
-    return 0;
 }
 
 //Funzioni per la generazione della mappa
@@ -477,7 +421,7 @@ void corridor(int start_x, int start_y, int end_x, int end_y, bool verticale)
 }
 
 //Genera il livello
-void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
+void generate(Enemy* list[ENEMIES_IN_LEVEL])
 {
     int corridor_x;
     int corridor_y;
@@ -501,9 +445,9 @@ void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
         //Posiziona il giocatore se è l'ultima stanza
         if(r == ROOMS - 1)
         {
-            player[0] = corridor_x;
-            player[1] = corridor_y;
             map[corridor_x][corridor_y] = PLAYER;
+            player.x = corridor_x;
+            player.y = corridor_y;
         }
     }
     //Posizionamento nemici
@@ -560,6 +504,7 @@ void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
             placed_potions++;
         }
     }
+    cout << player.x << '|' << player.y;
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
@@ -573,19 +518,18 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
 
 int main()
 {
-    int player[2];
     Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
     srand(0); //TODO: Rendere il seed modificabile...?
     //Ciclo del gioco
     while(true)
     {
         init();
-        generate(player, list);
+        generate(list);
         draw();
         //Ciclo di un livello
         while(true)
         {
-            int trigger = move(player);
+            int trigger = player.move();
             if(trigger == 1) //Uscita toccata
             {
                 break;
