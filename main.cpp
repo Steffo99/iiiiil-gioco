@@ -132,7 +132,6 @@ void inventory()
     {
         //Effetto degli oggetti
         unsigned char selezione = getch();
-        cout << selezione;
         if(selezione == 112) //p
         {
             if(pozioni_vita_piccole > 0)
