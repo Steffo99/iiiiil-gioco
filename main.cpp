@@ -100,11 +100,24 @@ class Enemy
         }
 };
 
+//Cura il giocatore di x
+void heal(int x)
+{
+    if(hp + x > HP_MAX)
+    {
+        hp = HP_MAX;
+    }
+    else
+    {
+        hp += x;
+    }
+}
+
 //Visualizza l'inventario
 void inventory()
 {
     system("cls");
-    cout << "INVENTARIO: \n";
+    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/50\n";
     for(int i = 0; i < X_MAX; i++)
     {
         cout << (char) DOUBLELINE;
@@ -112,25 +125,57 @@ void inventory()
     //Anche qui, credo si possa migliorare qualcosa...
     cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
     cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
-    cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina tutta la Vita\n";
+    cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
     //Selezione dell'oggetto da usare.
     cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\n";
     while(true)
     {
+        //Effetto degli oggetti
         unsigned char selezione = getch();
-        if(selezione == 'p')
+        cout << selezione;
+        if(selezione == 112) //p
         {
-
+            if(pozioni_vita_piccole > 0)
+            {
+                pozioni_vita_piccole--;
+                heal(10);
+                break;
+            }
         }
-        else if(selezione == 'n')
+        else if(selezione == 110) //n
         {
-
+            if(pozioni_vita_medie > 0)
+            {
+                pozioni_vita_medie--;
+                heal(20);
+                break;
+            }
         }
-        else if(selezione == 'm')
+        else if(selezione == 109) //m
         {
-            
+            if(pozioni_vita_grandi > 0)
+            {
+                pozioni_vita_grandi--;
+                heal(50);
+                break;
+            }
         }
     }
+}
+
+//Aggiorna la console con la situazione corrente del gioco.
+void draw()
+{
+    //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
+    system("cls");
+    for(int y=0; y<Y_MAX; y++)
+    {
+        for(int x=0; x<X_MAX; x++)
+        {
+            cout << map[x][y];
+        }
+    }
+    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/50";
 }
 
 //Fai muovere il giocatore
@@ -210,26 +255,13 @@ int move(int player[2])
         {
             //Apri l'inventario
             inventory();
+            //Torna alla mappa
+            draw();
         }
     }
     player[0] = player_x;
     player[1] = player_y;
     return 0;
-}
-
-//Aggiorna la console con la situazione corrente del gioco.
-void draw()
-{
-    //Svuota lo schermo della console. Sono sicuro che ci sia un modo molto migliore per farlo, ma non mi viene in mente...
-    system("cls");
-    for(int y=0; y<Y_MAX; y++)
-    {
-        for(int x=0; x<X_MAX; x++)
-        {
-            cout << map[x][y];
-        }
-    }
-    cout << "Piano: " << depth << ' ' << "Vita: " << hp;
 }
 
 //Funzioni per la generazione della mappa
