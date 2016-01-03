@@ -588,8 +588,7 @@ int main()
     {
         init();
         generate(list);
-        //draw();
-        cout << ' ' << player.x << '|' << player.y;
+        draw();
         //Ciclo di un livello
         while(true)
         {
@@ -598,7 +597,6 @@ int main()
             {
                 break;
             }
-            cout << "ENEMY";
             tick(list);
             draw();
         }
