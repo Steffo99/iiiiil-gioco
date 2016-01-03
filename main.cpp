@@ -10,6 +10,7 @@
 #define ROOM_SIZE 7
 #define ENEMIES_IN_LEVEL 5
 #define HP_MAX 50
+#define MAX_POTIONS_PER_FLOOR 5
 
 #define WALL 0xB2
 #define EMPTY 0xFF
@@ -17,6 +18,9 @@
 #define ENEMY 'X'
 #define EXIT '>'
 #define DOUBLELINE 0xCD
+#define ITEM_SMALL_POTION 'p'
+#define ITEM_MEDIUM_POTION 'n'
+#define ITEM_BIG_POTION 'm'
 
 using namespace std;
 
@@ -117,7 +121,7 @@ void heal(int x)
 void inventory()
 {
     system("cls");
-    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/50\n";
+    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/" << HP_MAX << "\n";
     for(int i = 0; i < X_MAX; i++)
     {
         cout << (char) DOUBLELINE;
@@ -195,7 +199,7 @@ void draw()
             cout << map[x][y];
         }
     }
-    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/50";
+    cout << "Piano: " << depth << ' ' << "Vita: " << hp << "/" << HP_MAX << '\n';
 }
 
 //Fai muovere il giocatore
@@ -220,6 +224,30 @@ int move(int player[2])
                         player_y--;
                         waiting = false;
                     }
+                    else if(map[player_x][player_y-1] == ITEM_SMALL_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y-1] = PLAYER;
+                        player_y--;
+                        pozioni_vita_piccole++;
+                        waiting = false;
+                    }
+                    else if(map[player_x][player_y-1] == ITEM_MEDIUM_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y-1] = PLAYER;
+                        player_y--;
+                        pozioni_vita_medie++;
+                        waiting = false;
+                    }
+                    else if(map[player_x-1][player_y-1] == ITEM_BIG_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y-1] = PLAYER;
+                        player_y--;
+                        pozioni_vita_grandi++;
+                        waiting = false;
+                    }
                     else if(map[player_x][player_y-1] == EXIT)
                     {
                         return 1;
@@ -231,6 +259,30 @@ int move(int player[2])
                         map[player_x][player_y] = EMPTY;
                         map[player_x][player_y+1] = PLAYER;
                         player_y++;
+                        waiting = false;
+                    }
+                    else if(map[player_x][player_y+1] == ITEM_SMALL_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y+1] = PLAYER;
+                        player_y++;
+                        pozioni_vita_piccole++;
+                        waiting = false;
+                    }
+                    else if(map[player_x][player_y+1] == ITEM_MEDIUM_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y+1] = PLAYER;
+                        player_y++;
+                        pozioni_vita_medie++;
+                        waiting = false;
+                    }
+                    else if(map[player_x-1][player_y] == ITEM_BIG_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x][player_y+1] = PLAYER;
+                        player_y++;
+                        pozioni_vita_grandi++;
                         waiting = false;
                     }
                     else if(map[player_x][player_y+1] == EXIT)
@@ -246,6 +298,30 @@ int move(int player[2])
                         player_x--;
                         waiting = false;
                     }
+                    else if(map[player_x-1][player_y] == ITEM_SMALL_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x-1][player_y] = PLAYER;
+                        player_x--;
+                        pozioni_vita_piccole++;
+                        waiting = false;
+                    }
+                    else if(map[player_x-1][player_y] == ITEM_MEDIUM_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x-1][player_y] = PLAYER;
+                        player_x--;
+                        pozioni_vita_medie++;
+                        waiting = false;
+                    }
+                    else if(map[player_x-1][player_y] == ITEM_BIG_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x-1][player_y] = PLAYER;
+                        player_x--;
+                        pozioni_vita_grandi++;
+                        waiting = false;
+                    }
                     else if(map[player_x-1][player_y] == EXIT)
                     {
                         return 1;
@@ -257,6 +333,30 @@ int move(int player[2])
                         map[player_x][player_y] = EMPTY;
                         map[player_x+1][player_y] = PLAYER;
                         player_x++;
+                        waiting = false;
+                    }
+                    else if(map[player_x+1][player_y] == ITEM_SMALL_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x+1][player_y] = PLAYER;
+                        player_x++;
+                        pozioni_vita_piccole++;
+                        waiting = false;
+                    }
+                    else if(map[player_x+1][player_y] == ITEM_MEDIUM_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x+1][player_y] = PLAYER;
+                        player_x++;
+                        pozioni_vita_medie++;
+                        waiting = false;
+                    }
+                    else if(map[player_x+1][player_y] == ITEM_BIG_POTION)
+                    {
+                        map[player_x][player_y] = EMPTY;
+                        map[player_x+1][player_y] = PLAYER;
+                        player_x++;
+                        pozioni_vita_grandi++;
                         waiting = false;
                     }
                     else if(map[player_x+1][player_y] == EXIT)
@@ -376,6 +476,7 @@ void corridor(int start_x, int start_y, int end_x, int end_y, bool verticale)
     }
 }
 
+//Genera il livello
 void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
 {
     int corridor_x;
@@ -434,7 +535,31 @@ void generate(int player[2], Enemy* list[ENEMIES_IN_LEVEL])
             break;
         }
     }
-
+    //Posizionamento pozioni di vita
+    int placed_potions = 0;
+    int potions_in_floor = rand() % MAX_POTIONS_PER_FLOOR + 1;
+    while(placed_potions < potions_in_floor)
+    {
+        int x = rand() % (X_MAX - 1) + 1;
+        int y = rand() % (Y_MAX - 1) + 1;
+        int size = rand() % 100;
+        if(map[x][y] == EMPTY)
+        {
+            if(size < 60)
+            {
+                map[x][y] = ITEM_SMALL_POTION;
+            }
+            else if(size > 90)
+            {
+                map[x][y] = ITEM_BIG_POTION;
+            }
+            else
+            {
+                map[x][y] = ITEM_MEDIUM_POTION;
+            }
+            placed_potions++;
+        }
+    }
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
