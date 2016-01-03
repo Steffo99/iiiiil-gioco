@@ -46,7 +46,20 @@ class Entity
         int x;
         int y;
         int hp;
+        int hp_max;
         int move();
+        //Cura di x l'entità
+        void heal(int x)
+        {
+            if(hp + x > HP_MAX)
+            {
+                hp = HP_MAX;
+            }
+            else
+            {
+                hp += x;
+            }
+        }
 };
 
 //Classe del giocatore
@@ -54,6 +67,7 @@ class Player : public Entity
 {
     public:
         int hp = HP_MAX;
+        int hp_max = HP_MAX;
         int move()
         {
             bool waiting = true;
@@ -295,19 +309,6 @@ class Enemy : public Entity
         }
 };
 
-//Cura il giocatore di x
-void heal(int x)
-{
-    if(player.hp + x > HP_MAX)
-    {
-        player.hp = HP_MAX;
-    }
-    else
-    {
-        player.hp += x;
-    }
-}
-
 //Aggiorna la console con la situazione corrente del gioco.
 void draw()
 {
@@ -368,7 +369,7 @@ void inventory()
             if(pozioni_vita_piccole > 0)
             {
                 pozioni_vita_piccole--;
-                heal(10);
+                player.heal(10);
                 break;
             }
         }
@@ -377,7 +378,7 @@ void inventory()
             if(pozioni_vita_medie > 0)
             {
                 pozioni_vita_medie--;
-                heal(20);
+                player.heal(20);
                 break;
             }
         }
@@ -386,7 +387,7 @@ void inventory()
             if(pozioni_vita_grandi > 0)
             {
                 pozioni_vita_grandi--;
-                heal(50);
+                player.heal(50);
                 break;
             }
         }
