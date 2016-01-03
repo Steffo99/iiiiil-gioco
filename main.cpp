@@ -326,7 +326,7 @@ class Player : public Entity
             }
             return 0;
         }
-};
+} player;
 
 //Classe dei nemici
 class Enemy : public Entity
@@ -484,7 +484,7 @@ void corridor(int start_x, int start_y, int end_x, int end_y, bool verticale)
 }
 
 //Genera il livello
-void generate(Player* player, Enemy* list[ENEMIES_IN_LEVEL])
+void generate(Enemy* list[ENEMIES_IN_LEVEL])
 {
     int corridor_x;
     int corridor_y;
@@ -509,10 +509,8 @@ void generate(Player* player, Enemy* list[ENEMIES_IN_LEVEL])
         if(r == ROOMS - 1)
         {
             map[corridor_x][corridor_y] = PLAYER;
-            Player* created = new Player();
-            created->x = corridor_x;
-            created->y = corridor_y;
-            player = created;
+            player.x = corridor_x;
+            player.y = corridor_y;
         }
     }
     //Posizionamento nemici
@@ -569,6 +567,7 @@ void generate(Player* player, Enemy* list[ENEMIES_IN_LEVEL])
             placed_potions++;
         }
     }
+    cout << player.x << '|' << player.y;
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
@@ -582,20 +581,19 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
 
 int main()
 {
-    Player* player; //Puntatore all'oggetto Giocatore
     Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
     srand(0); //TODO: Rendere il seed modificabile...?
     //Ciclo del gioco
     while(true)
     {
         init();
-        generate(player, list);
-        draw();
-        cout << player->x << '|' << player->y;
+        generate(list);
+        //draw();
+        cout << ' ' << player.x << '|' << player.y;
         //Ciclo di un livello
         while(true)
         {
-            int trigger = player->move();
+            int trigger = player.move();
             if(trigger == 1) //Uscita toccata
             {
                 break;
