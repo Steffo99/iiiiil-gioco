@@ -123,9 +123,30 @@ void inventory()
         cout << (char) DOUBLELINE;
     }
     //Anche qui, credo si possa migliorare qualcosa...
-    cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
-    cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
-    cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
+    if(pozioni_vita_piccole > 0)
+    {
+        cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
+    }
+    else
+    {
+        cout << '\n';
+    }
+    if(pozioni_vita_medie > 0)
+    {
+        cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
+    }
+    else
+    {
+        cout << '\n';
+    }
+    if(pozioni_vita_grandi > 0)
+    {
+        cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
+    }
+    else
+    {
+        cout << '\n';
+    }
     //Selezione dell'oggetto da usare.
     cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\n";
     while(true)
