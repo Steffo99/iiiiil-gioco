@@ -55,6 +55,19 @@ class Entity
                 hp += x;
             }
         }
+        //Danneggia di x l'entità
+        void damage(int x)
+        {
+            if(hp - x < 0)
+            {
+                //entità zombi
+                hp = 0;
+            }
+            else
+            {
+                hp -= x;
+            }
+        }
 };
 
 //Classe del giocatore
@@ -177,7 +190,7 @@ class Enemy : public Entity
             if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
             {
                 //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
-                player.hp -= rand() % 5 + 1;
+                player.damage(rand() % 5 + 1);
             }
             else
             {
