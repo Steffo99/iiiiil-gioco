@@ -181,7 +181,7 @@ class Enemy : public Entity
             if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
             {
                 //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
-                player.hp--;
+                hp -= rand() % 5 + 1;
             }
             else
             {
