@@ -9,20 +9,31 @@
 #define ROOMS 8
 #define ROOM_SIZE 7
 #define ENEMIES_IN_LEVEL 5
+#define HP_MAX 50
 
 #define WALL 0xB2
 #define EMPTY 0xFF
 #define PLAYER 0x02
 #define ENEMY 'X'
 #define EXIT '>'
+#define DOUBLELINE 0xCD
 
 using namespace std;
 
 //Mappa del gioco
 unsigned char map[X_MAX][Y_MAX];
 
+//Tutta sta roba non si potrebbe mettere in una classe giocatore o qualcosa del genere?
 //Numero del piano raggiunto dal giocatore
 int depth = 1;
+
+//Salute del giocatore
+int hp = HP_MAX;
+
+//Inventario del giocatore
+int pozioni_vita_piccole = 3;
+int pozioni_vita_medie = 2;
+int pozioni_vita_grandi = 1;
 
 //Classe dei nemici
 class Enemy
@@ -35,7 +46,8 @@ class Enemy
             //Se intorno c'è il giocatore
             if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
             {
-                //ATTACCO!
+                //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
+                hp--;
             }
             else
             {
@@ -87,6 +99,39 @@ class Enemy
             }
         }
 };
+
+//Visualizza l'inventario
+void inventory()
+{
+    system("cls");
+    cout << "INVENTARIO: \n";
+    for(int i = 0; i < X_MAX; i++)
+    {
+        cout << (char) DOUBLELINE;
+    }
+    //Anche qui, credo si possa migliorare qualcosa...
+    cout << pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
+    cout << pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
+    cout << pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina tutta la Vita\n";
+    //Selezione dell'oggetto da usare.
+    cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\n";
+    while(true)
+    {
+        unsigned char selezione = getch();
+        if(selezione == 'p')
+        {
+
+        }
+        else if(selezione == 'n')
+        {
+
+        }
+        else if(selezione == 'm')
+        {
+            
+        }
+    }
+}
 
 //Fai muovere il giocatore
 int move(int player[2])
@@ -156,16 +201,22 @@ int move(int player[2])
                     break;
             }
         }
-        else if(input == 115) //S
+        else if(input == 's') //S
         {
             //Salta un turno
             waiting = false;
+        }
+        else if(input == 'i') //I
+        {
+            //Apri l'inventario
+            inventory();
         }
     }
     player[0] = player_x;
     player[1] = player_y;
     return 0;
 }
+
 //Aggiorna la console con la situazione corrente del gioco.
 void draw()
 {
@@ -178,7 +229,7 @@ void draw()
             cout << map[x][y];
         }
     }
-    cout << "Piano " << depth;
+    cout << "Piano: " << depth << ' ' << "Vita: " << hp;
 }
 
 //Funzioni per la generazione della mappa
