@@ -71,162 +71,66 @@ class Player : public Entity
         int move()
         {
             bool waiting = true;
+            unsigned char* starting = &map[x][y]; //Casella attuale
+            unsigned char* target; //Bersaglio del movimento
             //Rileva i tasti freccia
             while(waiting)
             {
                 unsigned char input = getch();
+                short int dir = 0; //Direzione del movimento, per modificare x e y.
                 if(input == 224)
                 {
                     switch(getch())
                     {
-                        case 72: //Freccia su
-                            if(map[x][y-1] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y-1] = PLAYER;
-                                y--;
-                                waiting = false;
-                            }
-                            else if(map[x][y-1] == ITEM_SMALL_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y-1] = PLAYER;
-                                y--;
-                                pozioni_vita_piccole++;
-                                waiting = false;
-                            }
-                            else if(map[x][y-1] == ITEM_MEDIUM_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y-1] = PLAYER;
-                                y--;
-                                pozioni_vita_medie++;
-                                waiting = false;
-                            }
-                            else if(map[x-1][y-1] == ITEM_BIG_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y-1] = PLAYER;
-                                y--;
-                                pozioni_vita_grandi++;
-                                waiting = false;
-                            }
-                            else if(map[x][y-1] == EXIT)
-                            {
-                                return 1;
-                            }
+                        case 72: //Freccia su, 1
+                            target = &map[x][y-1];
+                            dir = 1;
                             break;
-                        case 80: //Freccia giù
-                            if(map[x][y+1] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y+1] = PLAYER;
-                                y++;
-                                waiting = false;
-                            }
-                            else if(map[x][y+1] == ITEM_SMALL_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y+1] = PLAYER;
-                                y++;
-                                pozioni_vita_piccole++;
-                                waiting = false;
-                            }
-                            else if(map[x][y+1] == ITEM_MEDIUM_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y+1] = PLAYER;
-                                y++;
-                                pozioni_vita_medie++;
-                                waiting = false;
-                            }
-                            else if(map[x-1][y] == ITEM_BIG_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y+1] = PLAYER;
-                                y++;
-                                pozioni_vita_grandi++;
-                                waiting = false;
-                            }
-                            else if(map[x][y+1] == EXIT)
-                            {
-                                return 1;
-                            }
+                        case 80: //Freccia giù, 2
+                            target = &map[x][y+1];
+                            dir = 2;
                             break;
-                        case 75: //Freccia sinistra
-                            if(map[x-1][y] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x-1][y] = PLAYER;
-                                x--;
-                                waiting = false;
-                            }
-                            else if(map[x-1][y] == ITEM_SMALL_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x-1][y] = PLAYER;
-                                x--;
-                                pozioni_vita_piccole++;
-                                waiting = false;
-                            }
-                            else if(map[x-1][y] == ITEM_MEDIUM_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x-1][y] = PLAYER;
-                                x--;
-                                pozioni_vita_medie++;
-                                waiting = false;
-                            }
-                            else if(map[x-1][y] == ITEM_BIG_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x-1][y] = PLAYER;
-                                x--;
-                                pozioni_vita_grandi++;
-                                waiting = false;
-                            }
-                            else if(map[x-1][y] == EXIT)
-                            {
-                                return 1;
-                            }
+                        case 75: //Freccia sinistra, 3
+                            target = &map[x-1][y];
+                            dir = 3;
                             break;
-                        case 77: //Freccia destra
-                            if(map[x+1][y] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x+1][y] = PLAYER;
-                                x++;
-                                waiting = false;
-                            }
-                            else if(map[x+1][y] == ITEM_SMALL_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x+1][y] = PLAYER;
-                                x++;
-                                pozioni_vita_piccole++;
-                                waiting = false;
-                            }
-                            else if(map[x+1][y] == ITEM_MEDIUM_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x+1][y] = PLAYER;
-                                x++;
-                                pozioni_vita_medie++;
-                                waiting = false;
-                            }
-                            else if(map[x+1][y] == ITEM_BIG_POTION)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x+1][y] = PLAYER;
-                                x++;
-                                pozioni_vita_grandi++;
-                                waiting = false;
-                            }
-                            else if(map[x+1][y] == EXIT)
-                            {
-                                return 1;
-                            }
+                        case 77: //Freccia destra, 4
+                            target = &map[x+1][y];
+                            dir = 4;
                             break;
+                        //Aggiungere gestione del caso che non sia una delle quattro frecce
+                    }
+                    //Muoviti e agisci!
+                    if(*target == EMPTY)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        waiting = false;
+                    }
+                    else if(*target == ITEM_SMALL_POTION)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        pozioni_vita_piccole++;
+                        waiting = false;
+                    }
+                    else if(*target == ITEM_MEDIUM_POTION)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        pozioni_vita_medie++;
+                        waiting = false;
+                    }
+                    else if(*target == ITEM_BIG_POTION)
+                    {
+                        *starting = EMPTY;
+                        *target = PLAYER;
+                        pozioni_vita_grandi++;
+                        waiting = false;
+                    }
+                    else if(*target == EXIT)
+                    {
+                        return 1;
                     }
                 }
                 else if(input == 's') //S
@@ -240,6 +144,27 @@ class Player : public Entity
                     inventory();
                     //Torna alla mappa
                     draw();
+                }
+                //Se ti sei mosso, controlla in che direzione e aggiorna correttamente la x e la y.
+                //Non mi veniva in mente un modo per farlo meglio.
+                if(!waiting)
+                {
+                    if(dir == 1)
+                    {
+                        y--;
+                    }
+                    else if(dir == 2)
+                    {
+                        y++;
+                    }
+                    else if(dir == 3)
+                    {
+                        x--;
+                    }
+                    else if(dir == 4)
+                    {
+                        x++;
+                    }
                 }
             }
             return 0;
@@ -321,7 +246,7 @@ void draw()
             cout << map[x][y];
         }
     }
-    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << '\n';
+    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << ' ' << player.x << '|' << player.y << '\n';
 }
 
 //Visualizza l'inventario
