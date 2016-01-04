@@ -11,17 +11,17 @@
 #define HP_MAX 50
 #define MAX_POTIONS_PER_FLOOR 5
 
-#define WALL 0xB2
-#define EMPTY 0xFF
-#define PLAYER 0x02
-#define ENEMY 'X'
-#define EXIT '>'
-#define DOUBLELINE 0xCD
-#define ITEM_SMALL_POTION 'p'
-#define ITEM_MEDIUM_POTION 'n'
-#define ITEM_BIG_POTION 'm'
-
 using namespace std;
+
+const unsigned char WALL = 0xB2;
+const unsigned char EMPTY = ' ';
+const unsigned char PLAYER = 0x02;
+const unsigned char ENEMY = 'X';
+const unsigned char EXIT = '>';
+const unsigned char DOUBLELINE = 0xCD;
+const unsigned char ITEM_SMALL_POTION = 'p';
+const unsigned char ITEM_MEDIUM_POTION = 'n';
+const unsigned char ITEM_BIG_POTION = 'm';
 
 //Mappa del gioco
 unsigned char map[X_MAX][Y_MAX];
@@ -251,52 +251,52 @@ void draw()
     {
         for(int x=0; x<X_MAX; x++)
         {
-            cout << map[x][y];
+            printf("%c", map[x][y]);
         }
     }
-    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << ' ' << player.x << '|' << player.y << '\n';
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.hp, HP_MAX, player.x, player.y);
 }
 
 //Visualizza l'inventario
 void inventory()
 {
     system("cls");
-    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << "\n";
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.hp, HP_MAX, player.x, player.y);
     for(int i = 0; i < X_MAX; i++)
     {
-        cout << (char) DOUBLELINE;
+        printf("%c", (char) DOUBLELINE);
     }
     //Anche qui, credo si possa migliorare qualcosa...
     if(player.pozioni_vita_piccole > 0)
     {
-        cout << player.pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
+        printf("%dx Pozione di Vita (p)iccola\tRipristina 10 Vita\n", player.pozioni_vita_piccole);
     }
     else
     {
-        cout << '\n';
+        printf("\n");
     }
     if(player.pozioni_vita_medie > 0)
     {
-        cout << player.pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
+        printf("%dx Pozione di Vita (n)ormale\tRipristina 20 Vita\n", player.pozioni_vita_medie);
     }
     else
     {
-        cout << '\n';
+        printf("\n");
     }
     if(player.pozioni_vita_grandi > 0)
     {
-        cout << player.pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
+        printf("%dx Pozione di Vita (m)aggiore\tRipristina 50 Vita\n", player.pozioni_vita_grandi);
     }
     else
     {
-        cout << '\n';
+        printf("\n");
     }
     for(int i = 0; i < X_MAX; i++)
     {
-        cout << (char) DOUBLELINE;
+        printf("%c", (char) DOUBLELINE);
     }
     //Selezione dell'oggetto da usare.
-    cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\nEsci con Esc.\n";
+    printf("Scrivi la lettera corrispondente all'oggetto che vuoi usare.\nEsci con Esc.\n");
     while(true)
     {
         //Effetto degli oggetti
@@ -511,7 +511,6 @@ void generate(Enemy* list[ENEMIES_IN_LEVEL])
             placed_potions++;
         }
     }
-    cout << player.x << '|' << player.y;
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
@@ -527,7 +526,7 @@ int main()
 {
     Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
     int seed; //Seed casuale per generare il livello
-    cout << "Seleziona un seed per la partita: ";
+    printf("Seleziona un seed per la partita: ");
     cin >> seed;
     srand(seed);
     //Ciclo del gioco
