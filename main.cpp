@@ -261,42 +261,42 @@ void draw()
 void inventory()
 {
     system("cls");
-    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << "\n";
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.hp, HP_MAX, player.x, player.y);
     for(int i = 0; i < X_MAX; i++)
     {
-        cout << (char) DOUBLELINE;
+        printf("%c", (char) DOUBLELINE);
     }
     //Anche qui, credo si possa migliorare qualcosa...
     if(player.pozioni_vita_piccole > 0)
     {
-        cout << player.pozioni_vita_piccole << "x Pozione di Vita (p)iccola\tRipristina 10 Vita\n";
+        printf("%dx Pozione di Vita (p)iccola\tRipristina 10 Vita\n", player.pozioni_vita_piccole);
     }
     else
     {
-        cout << '\n';
+        printf("\n");
     }
     if(player.pozioni_vita_medie > 0)
     {
-        cout << player.pozioni_vita_medie << "x Pozione di Vita (n)ormale\tRipristina 20 Vita\n";
+        printf("%dx Pozione di Vita (n)ormale\tRipristina 20 Vita\n", player.pozioni_vita_medie);
     }
     else
     {
-        cout << '\n';
+        printf("\n");
     }
     if(player.pozioni_vita_grandi > 0)
     {
-        cout << player.pozioni_vita_grandi << "x Pozione di Vita (m)aggiore\tRipristina 50 Vita\n";
+        printf("%dx Pozione di Vita (m)aggiore\tRipristina 50 Vita\n", player.pozioni_vita_grandi);
     }
     else
     {
-        cout << '\n';
+        printf("\n");
     }
     for(int i = 0; i < X_MAX; i++)
     {
-        cout << (char) DOUBLELINE;
+        printf("%c", (char) DOUBLELINE);
     }
     //Selezione dell'oggetto da usare.
-    cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\nEsci con Esc.\n";
+    printf("Scrivi la lettera corrispondente all'oggetto che vuoi usare.\nEsci con Esc.\n");
     while(true)
     {
         //Effetto degli oggetti
