@@ -481,7 +481,7 @@ void generate(Enemy* list[ENEMIES_IN_LEVEL])
     }
     //Posizionamento pozioni di vita
     int placed_potions = 0;
-    int potions_in_floor = rand() % MAX_POTIONS_PER_FLOOR + 1;
+    int potions_in_floor = rand() % MAX_POTIONS_PER_FLOOR;
     while(placed_potions < potions_in_floor)
     {
         int x = rand() % (X_MAX - 1) + 1;
