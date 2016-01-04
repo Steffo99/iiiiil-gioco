@@ -11,17 +11,17 @@
 #define HP_MAX 50
 #define MAX_POTIONS_PER_FLOOR 5
 
-#define WALL 0xB2
-#define EMPTY 0xFF
-#define PLAYER 0x02
-#define ENEMY 'X'
-#define EXIT '>'
-#define DOUBLELINE 0xCD
-#define ITEM_SMALL_POTION 'p'
-#define ITEM_MEDIUM_POTION 'n'
-#define ITEM_BIG_POTION 'm'
-
 using namespace std;
+
+const unsigned char WALL = 0xB2;
+const unsigned char EMPTY = ' ';
+const unsigned char PLAYER = 0x02;
+const unsigned char ENEMY = 'X';
+const unsigned char EXIT = '>';
+const unsigned char DOUBLELINE = 0xCD;
+const unsigned char ITEM_SMALL_POTION = 'p';
+const unsigned char ITEM_MEDIUM_POTION = 'n';
+const unsigned char ITEM_BIG_POTION = 'm';
 
 //Mappa del gioco
 unsigned char map[X_MAX][Y_MAX];
