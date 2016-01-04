@@ -1,6 +1,5 @@
 #include <iostream>
 #include <random>
-#include <time.h>
 #include <conio.h>
 #include <stdlib.h>
 
@@ -293,7 +292,7 @@ void inventory()
         cout << '\n';
     }
     //Selezione dell'oggetto da usare.
-    cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\n";
+    cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\nEsci con Esc.\n";
     while(true)
     {
         //Effetto degli oggetti
@@ -324,6 +323,10 @@ void inventory()
                 player.heal(50);
                 break;
             }
+        }
+        else if(selezione == 27) //esc
+        {
+            break;
         }
     }
 }
@@ -519,7 +522,10 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
 int main()
 {
     Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
-    srand(0); //TODO: Rendere il seed modificabile...?
+    int seed; //Seed casuale per generare il livello
+    cout << "Seleziona un seed per la partita: ";
+    cin >> seed;
+    srand(seed);
     //Ciclo del gioco
     while(true)
     {
