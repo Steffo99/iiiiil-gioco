@@ -511,7 +511,6 @@ void generate(Enemy* list[ENEMIES_IN_LEVEL])
             placed_potions++;
         }
     }
-    cout << player.x << '|' << player.y;
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
