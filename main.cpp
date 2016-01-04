@@ -251,10 +251,10 @@ void draw()
     {
         for(int x=0; x<X_MAX; x++)
         {
-            cout << map[x][y];
+            printf("%c", map[x][y]);
         }
     }
-    cout << "Piano: " << depth << ' ' << "Vita: " << player.hp << "/" << HP_MAX << ' ' << player.x << '|' << player.y << '\n';
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.hp, HP_MAX, player.x, player.y);
 }
 
 //Visualizza l'inventario
