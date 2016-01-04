@@ -291,6 +291,10 @@ void inventory()
     {
         cout << '\n';
     }
+    for(int i = 0; i < X_MAX; i++)
+    {
+        cout << (char) DOUBLELINE;
+    }
     //Selezione dell'oggetto da usare.
     cout << "Scrivi la lettera corrispondente all'oggetto che vuoi usare.\nEsci con Esc.\n";
     while(true)
