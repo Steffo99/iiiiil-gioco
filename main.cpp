@@ -526,7 +526,7 @@ int main()
 {
     Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
     int seed; //Seed casuale per generare il livello
-    cout << "Seleziona un seed per la partita: ";
+    printf("Seleziona un seed per la partita: ");
     cin >> seed;
     srand(seed);
     //Ciclo del gioco
