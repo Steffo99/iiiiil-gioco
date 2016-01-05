@@ -9,6 +9,7 @@
 #define ROOM_SIZE 7
 #define ENEMIES_IN_LEVEL 5
 #define HP_MAX 50
+#define STARTING_ATK 5
 #define MAX_POTIONS_PER_FLOOR 5
 
 using namespace std;
@@ -72,7 +73,15 @@ class Entity
 //Classe del giocatore
 class Player : public Entity
 {
+    private:
+        int equipment_atk = 0; //Attacco ottenuto dall'equipaggiamento
     public:
+        int base_atk = STARTING_ATK; //Attacco di base
+        int atk()
+        {
+            int result = equipment_atk + base_atk;
+            return result;
+        }
         int pozioni_vita_piccole = 3;
         int pozioni_vita_medie = 2;
         int pozioni_vita_grandi = 1;
@@ -254,14 +263,14 @@ void draw()
             printf("%c", map[x][y]);
         }
     }
-    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.hp, HP_MAX, player.x, player.y);
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.hp, HP_MAX, player.x, player.y, player.atk());
 }
 
 //Visualizza l'inventario
 void inventory()
 {
     system("cls");
-    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.hp, HP_MAX, player.x, player.y);
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.hp, HP_MAX, player.x, player.y, player.atk());
     for(int i = 0; i < X_MAX; i++)
     {
         printf("%c", (char) DOUBLELINE);
