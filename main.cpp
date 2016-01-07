@@ -227,6 +227,67 @@ class Enemy : public Entity
                     map[x][y+1] = ENEMY;
                     y++;
                 }
+                else if(map[x-1][y-1] == PLAYER) //In alto a sinistra
+                {
+                    if(map[x][y-1] == EMPTY) //Vai in alto
+                    {
+                        map[x][y] = EMPTY;
+                        map[x][y-1] = ENEMY;
+                        y--;
+                    }
+                    else if(map[x-1][y] == EMPTY) //Vai a sinistra
+                    {
+                        map[x][y] = EMPTY;
+                        map[x-1][y] = ENEMY;
+                        x--;
+                    }
+                }
+                else if(map[x-1][y+1] == PLAYER) //In basso a sinistra
+                {
+                    if(map[x][y+1] == EMPTY) //Vai in basso
+                    {
+                        map[x][y] = EMPTY;
+                        map[x][y+1] = ENEMY;
+                        y++;
+                    }
+                    else if(map[x-1][y] == EMPTY) //Vai a sinistra
+                    {
+                        map[x][y] = EMPTY;
+                        map[x-1][y] = ENEMY;
+                        x--;
+                    }
+                }
+                else if(map[x+1][y-1] == PLAYER) //In alto a destra
+                {
+                    if(map[x][y-1] == EMPTY) //Vai in alto
+                    {
+                        map[x][y] = EMPTY;
+                        map[x][y-1] = ENEMY;
+                        y--;
+                    }
+                    else if(map[x+1][y] == EMPTY) //Vai a destra
+                    {
+                        map[x][y] = EMPTY;
+                        map[x+1][y] = ENEMY;
+                        x++;
+                    }
+                }
+                else if(map[x+1][y+1] == PLAYER) //In basso a destra
+                {
+                    if(map[x][y+1] == EMPTY) //Vai in basso
+                    {
+                        map[x][y] = EMPTY;
+                        map[x][y+1] = ENEMY;
+                        y++;
+                    }
+                    else if(map[x+1][y] == EMPTY) //Vai a destra
+                    {
+                        map[x][y] = EMPTY;
+                        map[x+1][y] = ENEMY;
+                        x++;
+                    }
+                }
+                //Il giocatore non è vicino
                 else
                 {
                     //Muoviti in una direzione casuale
