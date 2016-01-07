@@ -202,49 +202,77 @@ class Enemy : public Entity
             }
             else
             {
-                //Muoviti in una direzione casuale
-                bool moving = true;
-                while(moving)
+                //Se il giocatore è vicino, muoviti verso di lui
+                if(map[x-2][y] == PLAYER && map[x-1][y] == EMPTY) //Due a sinistra
                 {
-                    int direction = rand() % 4;
-                    switch(direction)
+                    map[x][y] = EMPTY;
+                    map[x-1][y] = ENEMY;
+                    x--;
+                }
+                else if(map[x+2][y] == PLAYER && map[x+1][y] == EMPTY) //Due a destra
+                {
+                    map[x][y] = EMPTY;
+                    map[x+1][y] = ENEMY;
+                    x++;
+                }
+                else if(map[x][y-2] == PLAYER && map[x][y-1] == EMPTY) //Due in su
+                {
+                    map[x][y] = EMPTY;
+                    map[x][y-1] = ENEMY;
+                    y--;
+                }
+                else if(map[x][y+2] == PLAYER && map[x][y+1] == EMPTY) //Due in giù
+                {
+                    map[x][y] = EMPTY;
+                    map[x][y+1] = ENEMY;
+                    y++;
+                }
+                else
+                {
+                    //Muoviti in una direzione casuale
+                    bool moving = true;
+                    while(moving)
                     {
-                        case 0: //Sinistra
-                            if(map[x-1][y] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x-1][y] = ENEMY;
-                                x--;
-                                moving = false;
-                            }
-                            break;
-                        case 1: //Destra
-                            if(map[x+1][y] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x+1][y] = ENEMY;
-                                x++;
-                                moving = false;
-                            }
-                            break;
-                        case 2: //Su
-                            if(map[x][y-1] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y-1] = ENEMY;
-                                y--;
-                                moving = false;
-                            }
-                            break;
-                        case 3: //Giù
-                            if(map[x][y+1] == EMPTY)
-                            {
-                                map[x][y] = EMPTY;
-                                map[x][y+1] = ENEMY;
-                                y++;
-                                moving = false;
-                            }
-                            break;
+                        int direction = rand() % 4;
+                        switch(direction)
+                        {
+                            case 0: //Sinistra
+                                if(map[x-1][y] == EMPTY)
+                                {
+                                    map[x][y] = EMPTY;
+                                    map[x-1][y] = ENEMY;
+                                    x--;
+                                    moving = false;
+                                }
+                                break;
+                            case 1: //Destra
+                                if(map[x+1][y] == EMPTY)
+                                {
+                                    map[x][y] = EMPTY;
+                                    map[x+1][y] = ENEMY;
+                                    x++;
+                                    moving = false;
+                                }
+                                break;
+                            case 2: //Su
+                                if(map[x][y-1] == EMPTY)
+                                {
+                                    map[x][y] = EMPTY;
+                                    map[x][y-1] = ENEMY;
+                                    y--;
+                                    moving = false;
+                                }
+                                break;
+                            case 3: //Giù
+                                if(map[x][y+1] == EMPTY)
+                                {
+                                    map[x][y] = EMPTY;
+                                    map[x][y+1] = ENEMY;
+                                    y++;
+                                    moving = false;
+                                }
+                                break;
+                        }
                     }
                 }
             }
