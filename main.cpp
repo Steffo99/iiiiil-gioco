@@ -115,6 +115,9 @@ class Player : public Entity
                             target = &map[x+1][y];
                             dir = 4;
                             break;
+                        default: //Pag su, pag giù, skippa
+                            target = &map[x][y]; //Un po' hackerino, ma...
+                            break;
                         //Aggiungere gestione del caso che non sia una delle quattro frecce
                     }
                     //Muoviti e agisci!
