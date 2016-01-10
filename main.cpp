@@ -639,6 +639,20 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
     }
 }
 
+//Trova il puntatore al nemico in una certa posizione
+Enemy* find(Enemy* list[ENEMIES_IN_LEVEL], int x, int y)
+{
+    for(int e=0; e<ENEMIES_IN_LEVEL; e++)
+    {
+        //Se c'è un nemico in quella posizione ED E' VIVO
+        if(list[e]->x == x && list[e]->y == y && list[e]->alive)
+        {
+            return list[e];
+        }
+    }
+    return NULL;
+}
+
 int main()
 {
     Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
