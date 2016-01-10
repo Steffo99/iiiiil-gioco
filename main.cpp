@@ -38,6 +38,7 @@ void inventory();
 class Entity
 {
     public:
+        bool alive = true;
         int x;
         int y;
         int hp = HP_MAX;
@@ -60,13 +61,19 @@ class Entity
         {
             if(hp - x < 0)
             {
-                //entità zombi
-                hp = 0;
+                kill();
             }
             else
             {
                 hp -= x;
             }
+        }
+        //Uccide ed elimina l'entità
+        void kill()
+        {
+            hp = 0;
+            alive = false;
+            map[x][y] = EMPTY;
         }
 };
 
@@ -87,103 +94,106 @@ class Player : public Entity
         int pozioni_vita_grandi = 1;
         int move()
         {
-            bool waiting = true;
-            unsigned char* starting = &map[x][y]; //Casella attuale
-            unsigned char* target; //Bersaglio del movimento
-            //Rileva i tasti freccia
-            while(waiting)
+            if(alive)
             {
-                unsigned char input = getch();
-                short int dir = 0; //Direzione del movimento, per modificare x e y.
-                if(input == 224)
+                bool waiting = true;
+                unsigned char* starting = &map[x][y]; //Casella attuale
+                unsigned char* target; //Bersaglio del movimento
+                //Rileva i tasti freccia
+                while(waiting)
                 {
-                    switch(getch())
+                    unsigned char input = getch();
+                    short int dir = 0; //Direzione del movimento, per modificare x e y.
+                    if(input == 224)
                     {
-                        case 72: //Freccia su, 1
-                            target = &map[x][y-1];
-                            dir = 1;
-                            break;
-                        case 80: //Freccia giù, 2
-                            target = &map[x][y+1];
-                            dir = 2;
-                            break;
-                        case 75: //Freccia sinistra, 3
-                            target = &map[x-1][y];
-                            dir = 3;
-                            break;
-                        case 77: //Freccia destra, 4
-                            target = &map[x+1][y];
-                            dir = 4;
-                            break;
-                        default: //Pag su, pag giù, skippa
-                            target = &map[x][y]; //Un po' hackerino, ma...
-                            break;
-                        //Aggiungere gestione del caso che non sia una delle quattro frecce
+                        switch(getch())
+                        {
+                            case 72: //Freccia su, 1
+                                target = &map[x][y-1];
+                                dir = 1;
+                                break;
+                            case 80: //Freccia giù, 2
+                                target = &map[x][y+1];
+                                dir = 2;
+                                break;
+                            case 75: //Freccia sinistra, 3
+                                target = &map[x-1][y];
+                                dir = 3;
+                                break;
+                            case 77: //Freccia destra, 4
+                                target = &map[x+1][y];
+                                dir = 4;
+                                break;
+                            default: //Pag su, pag giù, skippa
+                                target = &map[x][y]; //Un po' hackerino, ma...
+                                break;
+                            //Aggiungere gestione del caso che non sia una delle quattro frecce
+                        }
+                        //Muoviti e agisci!
+                        if(*target == EMPTY)
+                        {
+                            *starting = EMPTY;
+                            *target = PLAYER;
+                            waiting = false;
+                        }
+                        else if(*target == ITEM_SMALL_POTION)
+                        {
+                            *starting = EMPTY;
+                            *target = PLAYER;
+                            pozioni_vita_piccole++;
+                            waiting = false;
+                        }
+                        else if(*target == ITEM_MEDIUM_POTION)
+                        {
+                            *starting = EMPTY;
+                            *target = PLAYER;
+                            pozioni_vita_medie++;
+                            waiting = false;
+                        }
+                        else if(*target == ITEM_BIG_POTION)
+                        {
+                            *starting = EMPTY;
+                            *target = PLAYER;
+                            pozioni_vita_grandi++;
+                            waiting = false;
+                        }
+                        else if(*target == EXIT)
+                        {
+                            return 1;
+                        }
                     }
-                    //Muoviti e agisci!
-                    if(*target == EMPTY)
+                    else if(input == 's') //S
                     {
-                        *starting = EMPTY;
-                        *target = PLAYER;
+                        //Salta un turno
                         waiting = false;
                     }
-                    else if(*target == ITEM_SMALL_POTION)
+                    else if(input == 'i') //I
                     {
-                        *starting = EMPTY;
-                        *target = PLAYER;
-                        pozioni_vita_piccole++;
-                        waiting = false;
+                        //Apri l'inventario
+                        inventory();
+                        //Torna alla mappa
+                        draw();
                     }
-                    else if(*target == ITEM_MEDIUM_POTION)
+                    //Se ti sei mosso, controlla in che direzione e aggiorna correttamente la x e la y.
+                    //Non mi veniva in mente un modo per farlo meglio.
+                    if(!waiting)
                     {
-                        *starting = EMPTY;
-                        *target = PLAYER;
-                        pozioni_vita_medie++;
-                        waiting = false;
-                    }
-                    else if(*target == ITEM_BIG_POTION)
-                    {
-                        *starting = EMPTY;
-                        *target = PLAYER;
-                        pozioni_vita_grandi++;
-                        waiting = false;
-                    }
-                    else if(*target == EXIT)
-                    {
-                        return 1;
-                    }
-                }
-                else if(input == 's') //S
-                {
-                    //Salta un turno
-                    waiting = false;
-                }
-                else if(input == 'i') //I
-                {
-                    //Apri l'inventario
-                    inventory();
-                    //Torna alla mappa
-                    draw();
-                }
-                //Se ti sei mosso, controlla in che direzione e aggiorna correttamente la x e la y.
-                //Non mi veniva in mente un modo per farlo meglio.
-                if(!waiting)
-                {
-                    if(dir == 1)
-                    {
-                        y--;
-                    }
-                    else if(dir == 2)
-                    {
-                        y++;
-                    }
-                    else if(dir == 3)
-                    {
-                        x--;
-                    }
-                    else if(dir == 4)
-                    {
-                        x++;
+                        if(dir == 1)
+                        {
+                            y--;
+                        }
+                        else if(dir == 2)
+                        {
+                            y++;
+                        }
+                        else if(dir == 3)
+                        {
+                            x--;
+                        }
+                        else if(dir == 4)
+                        {
+                            x++;
+                        }
                     }
                 }
             }
@@ -197,147 +207,150 @@ class Enemy : public Entity
     public:
         int move()
         {
-            //Se intorno c'è il giocatore
-            if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
+            if(alive)
             {
-                //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
-                player.damage(rand() % 5 + 1);
-            }
-            else
-            {
-                //Se il giocatore è vicino, muoviti verso di lui
-                if(map[x-2][y] == PLAYER && map[x-1][y] == EMPTY) //Due a sinistra
+                //Se intorno c'è il giocatore
+                if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
                 {
-                    map[x][y] = EMPTY;
-                    map[x-1][y] = ENEMY;
-                    x--;
+                    //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
+                    player.damage(rand() % 5 + 1);
                 }
-                else if(map[x+2][y] == PLAYER && map[x+1][y] == EMPTY) //Due a destra
-                {
-                    map[x][y] = EMPTY;
-                    map[x+1][y] = ENEMY;
-                    x++;
-                }
-                else if(map[x][y-2] == PLAYER && map[x][y-1] == EMPTY) //Due in su
-                {
-                    map[x][y] = EMPTY;
-                    map[x][y-1] = ENEMY;
-                    y--;
-                }
-                else if(map[x][y+2] == PLAYER && map[x][y+1] == EMPTY) //Due in giù
-                {
-                    map[x][y] = EMPTY;
-                    map[x][y+1] = ENEMY;
-                    y++;
-                }
-                else if(map[x-1][y-1] == PLAYER) //In alto a sinistra
-                {
-                    if(map[x][y-1] == EMPTY) //Vai in alto
-                    {
-                        map[x][y] = EMPTY;
-                        map[x][y-1] = ENEMY;
-                        y--;
-                    }
-                    else if(map[x-1][y] == EMPTY) //Vai a sinistra
-                    {
-                        map[x][y] = EMPTY;
-                        map[x-1][y] = ENEMY;
-                        x--;
-                    }
-                }
-                else if(map[x-1][y+1] == PLAYER) //In basso a sinistra
-                {
-                    if(map[x][y+1] == EMPTY) //Vai in basso
-                    {
-                        map[x][y] = EMPTY;
-                        map[x][y+1] = ENEMY;
-                        y++;
-                    }
-                    else if(map[x-1][y] == EMPTY) //Vai a sinistra
-                    {
-                        map[x][y] = EMPTY;
-                        map[x-1][y] = ENEMY;
-                        x--;
-                    }
-                }
-                else if(map[x+1][y-1] == PLAYER) //In alto a destra
-                {
-                    if(map[x][y-1] == EMPTY) //Vai in alto
-                    {
-                        map[x][y] = EMPTY;
-                        map[x][y-1] = ENEMY;
-                        y--;
-                    }
-                    else if(map[x+1][y] == EMPTY) //Vai a destra
-                    {
-                        map[x][y] = EMPTY;
-                        map[x+1][y] = ENEMY;
-                        x++;
-                    }
-                }
-                else if(map[x+1][y+1] == PLAYER) //In basso a destra
-                {
-                    if(map[x][y+1] == EMPTY) //Vai in basso
-                    {
-                        map[x][y] = EMPTY;
-                        map[x][y+1] = ENEMY;
-                        y++;
-                    }
-                    else if(map[x+1][y] == EMPTY) //Vai a destra
-                    {
-                        map[x][y] = EMPTY;
-                        map[x+1][y] = ENEMY;
-                        x++;
-                    }
-                }
-                //Il giocatore non è vicino
                 else
                 {
-                    if(map[x-1][y] == EMPTY || map[x+1][y] == EMPTY || map[x][y-1] == EMPTY || map[x][y+1] == EMPTY)
+                    //Se il giocatore è vicino, muoviti verso di lui
+                    if(map[x-2][y] == PLAYER && map[x-1][y] == EMPTY) //Due a sinistra
                     {
-                        //Muoviti in una direzione casuale
-                        bool moving = true;
-                        while(moving)
+                        map[x][y] = EMPTY;
+                        map[x-1][y] = ENEMY;
+                        x--;
+                    }
+                    else if(map[x+2][y] == PLAYER && map[x+1][y] == EMPTY) //Due a destra
+                    {
+                        map[x][y] = EMPTY;
+                        map[x+1][y] = ENEMY;
+                        x++;
+                    }
+                    else if(map[x][y-2] == PLAYER && map[x][y-1] == EMPTY) //Due in su
+                    {
+                        map[x][y] = EMPTY;
+                        map[x][y-1] = ENEMY;
+                        y--;
+                    }
+                    else if(map[x][y+2] == PLAYER && map[x][y+1] == EMPTY) //Due in giù
+                    {
+                        map[x][y] = EMPTY;
+                        map[x][y+1] = ENEMY;
+                        y++;
+                    }
+                    else if(map[x-1][y-1] == PLAYER) //In alto a sinistra
+                    {
+                        if(map[x][y-1] == EMPTY) //Vai in alto
                         {
-                            int direction = rand() % 4;
-                            switch(direction)
+                            map[x][y] = EMPTY;
+                            map[x][y-1] = ENEMY;
+                            y--;
+                        }
+                        else if(map[x-1][y] == EMPTY) //Vai a sinistra
+                        {
+                            map[x][y] = EMPTY;
+                            map[x-1][y] = ENEMY;
+                            x--;
+                        }
+                    }
+                    else if(map[x-1][y+1] == PLAYER) //In basso a sinistra
+                    {
+                        if(map[x][y+1] == EMPTY) //Vai in basso
+                        {
+                            map[x][y] = EMPTY;
+                            map[x][y+1] = ENEMY;
+                            y++;
+                        }
+                        else if(map[x-1][y] == EMPTY) //Vai a sinistra
+                        {
+                            map[x][y] = EMPTY;
+                            map[x-1][y] = ENEMY;
+                            x--;
+                        }
+                    }
+                    else if(map[x+1][y-1] == PLAYER) //In alto a destra
+                    {
+                        if(map[x][y-1] == EMPTY) //Vai in alto
+                        {
+                            map[x][y] = EMPTY;
+                            map[x][y-1] = ENEMY;
+                            y--;
+                        }
+                        else if(map[x+1][y] == EMPTY) //Vai a destra
+                        {
+                            map[x][y] = EMPTY;
+                            map[x+1][y] = ENEMY;
+                            x++;
+                        }
+                    }
+                    else if(map[x+1][y+1] == PLAYER) //In basso a destra
+                    {
+                        if(map[x][y+1] == EMPTY) //Vai in basso
+                        {
+                            map[x][y] = EMPTY;
+                            map[x][y+1] = ENEMY;
+                            y++;
+                        }
+                        else if(map[x+1][y] == EMPTY) //Vai a destra
+                        {
+                            map[x][y] = EMPTY;
+                            map[x+1][y] = ENEMY;
+                            x++;
+                        }
+                    }
+                    //Il giocatore non è vicino
+                    else
+                    {
+                        if(map[x-1][y] == EMPTY || map[x+1][y] == EMPTY || map[x][y-1] == EMPTY || map[x][y+1] == EMPTY)
+                        {
+                            //Muoviti in una direzione casuale
+                            bool moving = true;
+                            while(moving)
                             {
-                                case 0: //Sinistra
-                                    if(map[x-1][y] == EMPTY)
-                                    {
-                                        map[x][y] = EMPTY;
-                                        map[x-1][y] = ENEMY;
-                                        x--;
-                                        moving = false;
-                                    }
-                                    break;
-                                case 1: //Destra
-                                    if(map[x+1][y] == EMPTY)
-                                    {
-                                        map[x][y] = EMPTY;
-                                        map[x+1][y] = ENEMY;
-                                        x++;
-                                        moving = false;
-                                    }
-                                    break;
-                                case 2: //Su
-                                    if(map[x][y-1] == EMPTY)
-                                    {
-                                        map[x][y] = EMPTY;
-                                        map[x][y-1] = ENEMY;
-                                        y--;
-                                        moving = false;
-                                    }
-                                    break;
-                                case 3: //Giù
-                                    if(map[x][y+1] == EMPTY)
-                                    {
-                                        map[x][y] = EMPTY;
-                                        map[x][y+1] = ENEMY;
-                                        y++;
-                                        moving = false;
-                                    }
-                                    break;
+                                int direction = rand() % 4;
+                                switch(direction)
+                                {
+                                    case 0: //Sinistra
+                                        if(map[x-1][y] == EMPTY)
+                                        {
+                                            map[x][y] = EMPTY;
+                                            map[x-1][y] = ENEMY;
+                                            x--;
+                                            moving = false;
+                                        }
+                                        break;
+                                    case 1: //Destra
+                                        if(map[x+1][y] == EMPTY)
+                                        {
+                                            map[x][y] = EMPTY;
+                                            map[x+1][y] = ENEMY;
+                                            x++;
+                                            moving = false;
+                                        }
+                                        break;
+                                    case 2: //Su
+                                        if(map[x][y-1] == EMPTY)
+                                        {
+                                            map[x][y] = EMPTY;
+                                            map[x][y-1] = ENEMY;
+                                            y--;
+                                            moving = false;
+                                        }
+                                        break;
+                                    case 3: //Giù
+                                        if(map[x][y+1] == EMPTY)
+                                        {
+                                            map[x][y] = EMPTY;
+                                            map[x][y+1] = ENEMY;
+                                            y++;
+                                            moving = false;
+                                        }
+                                        break;
+                                }
                             }
                         }
                     }
