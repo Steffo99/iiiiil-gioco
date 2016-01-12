@@ -114,6 +114,11 @@ class Player : public Entity
             int result = equipment_atk + base_atk;
             return result;
         }
+        int def()
+        {
+            int result = equipment_def + base_def;
+            return result;
+        }
         int pozioni_vita_piccole = 3;
         int pozioni_vita_medie = 2;
         int pozioni_vita_grandi = 1;
@@ -714,10 +719,12 @@ Enemy* find(int x, int y)
     }
     return NULL;
 }
+
 void attack(int x, int y)
 {
     find(x,y)->damage(50);
 }
+
 int main()
 {
     int seed; //Seed casuale per generare il livello
