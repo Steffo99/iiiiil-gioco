@@ -687,15 +687,15 @@ int main()
     //Ciclo del gioco
     while(true)
     {
-    	int enemies_in_level;
-    	if(depth < MAX_ENEMIES)
-    	{
-    		enemies_in_level = depth;
-    	}
-    	else
-    	{
-    		enemies_in_level = MAX_ENEMIES;
-    	}
+        int enemies_in_level;
+        if(depth < MAX_ENEMIES)
+        {
+            enemies_in_level = depth;
+        }
+        else
+        {
+            enemies_in_level = MAX_ENEMIES;
+        }
         init();
         generate(enemies_in_level);
         draw();
