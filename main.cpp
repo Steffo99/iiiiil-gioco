@@ -15,6 +15,7 @@ using namespace std;
 #define STARTING_ATK 5
 #define STARTING_DEF 5
 #define MAX_POTIONS_PER_FLOOR 5
+#define ENEMY_HP 10
 
 //Costanti globali per il rendering della mappa
 const unsigned char WALL = 0xB2;
@@ -54,13 +55,12 @@ Enemy* find(int x, int y);
 //Classe entità generica, sia nemico sia giocatore
 class Entity
 {
-    protected:
-        int hp = HP_MAX;
-        int hp_max = HP_MAX;
     public:
         bool alive = true;
         int x;
         int y;
+        int hp = HP_MAX;
+        int hp_max = HP_MAX;
         int move();
         //Cura di x l'entità
         void heal(int x)
@@ -437,14 +437,14 @@ void draw()
             printf("%c", map[x][y]);
         }
     }
-    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.gethp(), HP_MAX, player.x, player.y, player.atk());
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.gethp(), HP_MAX, player.x, player.y);
 }
 
 //Visualizza l'inventario
 void inventory()
 {
     system("cls");
-    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.gethp(), HP_MAX, player.x, player.y, player.atk());
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d\n", depth, player.gethp(), HP_MAX, player.x, player.y);
     for(int i = 0; i < X_MAX; i++)
     {
         //TODO: Cambiare qui. Rallenta.
@@ -654,6 +654,8 @@ void generate(int enemies_to_place)
                 Enemy* created = new Enemy();
                 created->x = x;
                 created->y = y;
+                created->hp = ENEMY_HP;
+                created->hp_max = ENEMY_HP;
                 list[e] = created;
                 break;
             }
@@ -722,7 +724,7 @@ Enemy* find(int x, int y)
 
 void attack(int x, int y)
 {
-    find(x,y)->damage(50);
+    find(x,y)->damage(player.atk());
 }
 
 int main()
