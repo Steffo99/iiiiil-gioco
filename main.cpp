@@ -10,6 +10,7 @@
 #define ENEMIES_IN_LEVEL 5
 #define HP_MAX 50
 #define STARTING_ATK 5
+#define STARTING_DEF 5
 #define MAX_POTIONS_PER_FLOOR 5
 
 using namespace std;
@@ -81,9 +82,11 @@ class Entity
 class Player : public Entity
 {
     private:
-        int equipment_atk = 0; //Attacco ottenuto dall'equipaggiamento
-    public:
         int base_atk = STARTING_ATK; //Attacco di base
+        int base_def = STARTING_DEF; //Difesa di base
+        int equipment_atk = 0; //Attacco ottenuto dall'equipaggiamento
+        int equipment_def = 0; //Difesa ottenuta dall'equipaggiamento
+    public:
         int atk()
         {
             int result = equipment_atk + base_atk;
