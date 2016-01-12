@@ -10,7 +10,7 @@ using namespace std;
 #define Y_MAX 23
 #define ROOMS 8
 #define ROOM_SIZE 7
-#define ENEMIES_IN_LEVEL 5
+#define MAX_ENEMIES 50
 #define HP_MAX 50
 #define STARTING_ATK 5
 #define STARTING_DEF 5
@@ -34,7 +34,7 @@ class Enemy;
 
 //Variabili globali
 //Lista di tutti i nemici nel livello
-Enemy* list[ENEMIES_IN_LEVEL];
+Enemy* list[MAX_ENEMIES];
 //Numero del piano raggiunto dal giocatore
 int depth = 1;
 //Mappa del gioco
@@ -570,7 +570,7 @@ void corridor(int start_x, int start_y, int end_x, int end_y, bool verticale)
 }
 
 //Genera il livello
-void generate()
+void generate(int enemies_to_place)
 {
     int corridor_x;
     int corridor_y;
@@ -600,7 +600,7 @@ void generate()
         }
     }
     //Posizionamento nemici
-    for(int e=0; e<ENEMIES_IN_LEVEL; e++)
+    for(int e=0; e<enemies_to_place; e++)
     {
         while(true)
         {
@@ -656,9 +656,9 @@ void generate()
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
-void tick()
+void tick(int enemies_to_tick)
 {
-    for(int e=0; e<ENEMIES_IN_LEVEL; e++)
+    for(int e=0; e<enemies_to_tick; e++)
     {
         list[e]->move();
     }
@@ -667,7 +667,7 @@ void tick()
 //Trova il puntatore al nemico in una certa posizione
 Enemy* find(int x, int y)
 {
-    for(int e=0; e<ENEMIES_IN_LEVEL; e++)
+    for(int e=0; e<MAX_ENEMIES; e++)
     {
         //Se c'è un nemico in quella posizione ED E' VIVO
         if(list[e]->x == x && list[e]->y == y && list[e]->alive)
@@ -687,8 +687,17 @@ int main()
     //Ciclo del gioco
     while(true)
     {
+    	int enemies_in_level;
+    	if(depth < MAX_ENEMIES)
+    	{
+    		enemies_in_level = depth;
+    	}
+    	else
+    	{
+    		enemies_in_level = MAX_ENEMIES;
+    	}
         init();
-        generate();
+        generate(enemies_in_level);
         draw();
         //Ciclo di un livello
         while(true)
@@ -698,7 +707,7 @@ int main()
             {
                 break;
             }
-            tick();
+            tick(enemies_in_level);
             draw();
         }
         depth++;
