@@ -2,7 +2,7 @@
 #include <random>
 #include <conio.h>
 #include <stdlib.h>
-
+#include <time.h>
 using namespace std;
 
 //Costanti di sistema
@@ -18,7 +18,7 @@ using namespace std;
 #define ENEMY_HP 10
 
 //Costanti globali per il rendering della mappa
-const unsigned char WALL = 0xB2;
+unsigned char WALL = 0xB2;
 const unsigned char EMPTY = ' ';
 const unsigned char PLAYER = 0x02;
 const unsigned char ENEMY = 'X';
@@ -730,7 +730,79 @@ void attack(int x, int y)
 int main()
 {
     int seed; //Seed casuale per generare il livello
-    printf("Seleziona un seed per la partita: ");
+    srand (time(NULL));
+    int titolo=0, cursorpos=1;
+    string splash[10]{"Ora con ben 2 colori!", "E' come skyrim, ma con una bella grafica!", "Quasi senza bug", "Potrebbe contenere canditi", "Ora in grado di generare fame", "I colori hanno ben 1 sfumatura", "I SEE YOU", "WOLOLO", "AUTOMAAAAAH", "Stai davvero giocando a sta roba? WOW!"};
+    cout << " "<<endl;
+    cout << "  000000" << endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000"<< endl;
+    cout << "    00                            000         00          000000 000000 000000"<< endl;
+    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+    titolo= rand()%10;
+    cout << "\n\n  Citazione all'avvio: "<< splash[titolo] <<endl;
+    cout << "\n\n\n\n                        Premi INVIO per entrare nel menu!"<<endl;
+    char a=getchar();
+    while(1)
+    {
+    system("cls");
+    if(cursorpos==1)
+    {
+    cout << " "<<endl;
+    cout << "  000000" << endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000"<< endl;
+    cout << "    00                            000         00          000000 000000 000000"<< endl;
+    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+    cout << "\n\n                               >  NUOVA PARTITA  <"<<endl;
+    cout << "\n                                     OPZIONI"<<endl;
+    }
+    if(cursorpos==2)
+    {
+    cout << " "<<endl;
+    cout << "  000000" << endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000"<< endl;
+    cout << "    00                            000         00          000000 000000 000000"<< endl;
+    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+    cout << "\n\n                                  NUOVA PARTITA   "<<endl;
+    cout << "\n                                  >  OPZIONI  <"<<endl;
+    }
+    a=getch();
+    if(a==72)
+    {
+        cursorpos=cursorpos-1;
+    }
+    if(a==80)
+    {
+        cursorpos=cursorpos+1;
+    }
+    if (a==13)//PRESSIONE ENTER SU ELEMENTI MENU
+        {
+            if (cursorpos==1)//AVVIO GIOCO
+            {
+                break;
+            }
+            if (cursorpos==2)
+            {
+                system("cls");
+                cout << "Modificare tipo blocco? (S/N)"<<endl;
+                char scelta;
+                cin >> scelta;
+                if(scelta == 'S' || scelta== 's')
+                {
+                   WALL= 0xDB;
+                }
+            }
+        }
+    }
+    printf("\n\nSeleziona un seed per la partita: ");
     cin >> seed;
     srand(seed);
     //Ciclo del gioco
