@@ -3,6 +3,9 @@
 #include <conio.h>
 #include <stdlib.h>
 
+using namespace std;
+
+//Costanti di sistema
 #define X_MAX 80
 #define Y_MAX 23
 #define ROOMS 8
@@ -13,8 +16,7 @@
 #define STARTING_DEF 5
 #define MAX_POTIONS_PER_FLOOR 5
 
-using namespace std;
-
+//Costanti globali per il rendering della mappa
 const unsigned char WALL = 0xB2;
 const unsigned char EMPTY = ' ';
 const unsigned char PLAYER = 0x02;
@@ -25,15 +27,28 @@ const unsigned char ITEM_SMALL_POTION = 'p';
 const unsigned char ITEM_MEDIUM_POTION = 'n';
 const unsigned char ITEM_BIG_POTION = 'm';
 
+//Prototipiamo tutte le classi
+class Entity;
+class Player;
+class Enemy;
+
+//Variabili globali
+//Lista di tutti i nemici nel livello
+Enemy* list[ENEMIES_IN_LEVEL];
+//Numero del piano raggiunto dal giocatore
+int depth = 1;
 //Mappa del gioco
 unsigned char map[X_MAX][Y_MAX];
 
-//Numero del piano raggiunto dal giocatore
-int depth = 1;
-
-//Devo mettere due volte draw perchè ha bisogno della classe Player, a cui però serve la funzione draw. Idem per l'inventario...
+//Prototipiamo tutte le funzioni, per semplificarci un po' la vita
 void draw();
 void inventory();
+void init();
+void room(int start_x, int start_y, int end_x, int end_y);
+void corridor(int start_x, int start_y, int end_x, int end_y, bool verticale);
+void generate();
+void tick();
+Enemy* find(int x, int y);
 
 //Classe entità generica, sia nemico sia giocatore
 class Entity
@@ -367,8 +382,6 @@ class Enemy : public Entity
             }
         }
 };
-
-Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
 
 //Aggiorna la console con la situazione corrente del gioco.
 void draw()
