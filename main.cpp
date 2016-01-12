@@ -38,12 +38,13 @@ void inventory();
 //Classe entità generica, sia nemico sia giocatore
 class Entity
 {
+    protected:
+        int hp = HP_MAX;
+        int hp_max = HP_MAX;
     public:
         bool alive = true;
         int x;
         int y;
-        int hp = HP_MAX;
-        int hp_max = HP_MAX;
         int move();
         //Cura di x l'entità
         void heal(int x)
@@ -75,6 +76,11 @@ class Entity
             hp = 0;
             alive = false;
             map[x][y] = EMPTY;
+        }
+        //Visualizza la vita
+        int gethp()
+        {
+            return hp;
         }
 };
 
@@ -374,16 +380,17 @@ void draw()
             printf("%c", map[x][y]);
         }
     }
-    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.hp, HP_MAX, player.x, player.y, player.atk());
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.gethp(), HP_MAX, player.x, player.y, player.atk());
 }
 
 //Visualizza l'inventario
 void inventory()
 {
     system("cls");
-    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.hp, HP_MAX, player.x, player.y, player.atk());
+    printf("Piano: %d | Vita: %d/%d | x:%d y:%d | atk: %d\n", depth, player.gethp(), HP_MAX, player.x, player.y, player.atk());
     for(int i = 0; i < X_MAX; i++)
     {
+        //TODO: Cambiare qui. Rallenta.
         printf("%c", (char) DOUBLELINE);
     }
     //Anche qui, credo si possa migliorare qualcosa...
