@@ -201,37 +201,38 @@ class Player : public Entity
                     }
                     else if(input == 'a') //A
                     {
+                        printf("ATTACCO selezionato");
                         if(getch() == 224)
                         {
                             char atk=getch();
                             switch(atk)
                             {
-
-                            case 72: //ATK SU
-                                if(map[x][y-1]==ENEMY)
-                                {
-                                    attack(x, y-1);
-                                }
-                                break;
-                            case 80: //ATK GIU
-                                if(map[x][y+1]==ENEMY)
-                                {
-                                    attack(x, y+1);
-                                }
-                                break;
-                            case 75: //ATK SX
-                                if(map[x-1][y]==ENEMY)
-                                {
-                                    attack(x-1, y);
-                                }
-                                break;
-                            case 77: //ATK DX
-                                if(map[x+1][y]==ENEMY)
-                                {
-                                    attack(x+1, y);
-                                }
-                                break;
+                                case 72: //ATK SU
+                                    if(map[x][y-1]==ENEMY)
+                                    {
+                                        attack(x, y-1);
+                                    }
+                                    break;
+                                case 80: //ATK GIU
+                                    if(map[x][y+1]==ENEMY)
+                                    {
+                                        attack(x, y+1);
+                                    }
+                                    break;
+                                case 75: //ATK SX
+                                    if(map[x-1][y]==ENEMY)
+                                    {
+                                        attack(x-1, y);
+                                    }
+                                    break;
+                                case 77: //ATK DX
+                                    if(map[x+1][y]==ENEMY)
+                                    {
+                                        attack(x+1, y);
+                                    }
+                                    break;
                             }
+                            waiting = false;
                         }
                     }
                     //Se ti sei mosso, controlla in che direzione e aggiorna correttamente la x e la y.
