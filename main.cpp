@@ -368,6 +368,8 @@ class Enemy : public Entity
         }
 };
 
+Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
+
 //Aggiorna la console con la situazione corrente del gioco.
 void draw()
 {
@@ -555,7 +557,7 @@ void corridor(int start_x, int start_y, int end_x, int end_y, bool verticale)
 }
 
 //Genera il livello
-void generate(Enemy* list[ENEMIES_IN_LEVEL])
+void generate()
 {
     int corridor_x;
     int corridor_y;
@@ -641,7 +643,7 @@ void generate(Enemy* list[ENEMIES_IN_LEVEL])
 }
 
 //Processa il resto di un turno, dopo il movimento del giocatore.
-void tick(Enemy* list[ENEMIES_IN_LEVEL])
+void tick()
 {
     for(int e=0; e<ENEMIES_IN_LEVEL; e++)
     {
@@ -650,7 +652,7 @@ void tick(Enemy* list[ENEMIES_IN_LEVEL])
 }
 
 //Trova il puntatore al nemico in una certa posizione
-Enemy* find(Enemy* list[ENEMIES_IN_LEVEL], int x, int y)
+Enemy* find(int x, int y)
 {
     for(int e=0; e<ENEMIES_IN_LEVEL; e++)
     {
@@ -665,7 +667,6 @@ Enemy* find(Enemy* list[ENEMIES_IN_LEVEL], int x, int y)
 
 int main()
 {
-    Enemy* list[ENEMIES_IN_LEVEL]; //Lista di tutti i nemici nel livello
     int seed; //Seed casuale per generare il livello
     printf("Seleziona un seed per la partita: ");
     cin >> seed;
@@ -674,7 +675,7 @@ int main()
     while(true)
     {
         init();
-        generate(list);
+        generate();
         draw();
         //Ciclo di un livello
         while(true)
@@ -684,7 +685,7 @@ int main()
             {
                 break;
             }
-            tick(list);
+            tick();
             draw();
         }
         depth++;
