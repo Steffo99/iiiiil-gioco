@@ -76,7 +76,7 @@ class Entity
         //Danneggia di x l'entità
         void damage(int x)
         {
-            if(hp - x < 0)
+            if(hp - x <= 0)
             {
                 kill();
             }
