@@ -11,7 +11,7 @@ using namespace std;
 #define ROOMS 8
 #define ROOM_SIZE 7
 #define MAX_ENEMIES 50
-#define HP_MAX 50
+#define HP_MAX 100
 #define STARTING_ATK 5
 #define STARTING_DEF 5
 #define MAX_POTIONS_PER_FLOOR 5
