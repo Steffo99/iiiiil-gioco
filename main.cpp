@@ -742,54 +742,55 @@ int main()
     cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
     cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
     titolo= rand()%10;
-    cout << "\n\n  Citazione all'avvio: "<< splash[titolo] <<endl;
-    cout << "\n\n\n\n                        Premi INVIO per entrare nel menu!"<<endl;
-    char a=getchar();
-    while(1)
+    cout << "\n\n Citazione all'avvio: "<< splash[titolo]                                   << endl;
+    cout << "\n\n\n\n Premi INVIO per entrare nel menu!"                                    << endl;
+    getch();
+    while(true)
     {
-    system("cls");
-    if(cursorpos==1)
-    {
-    cout << " "<<endl;
-    cout << "  000000" << endl;
-    cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000"<< endl;
-    cout << "    00                            000         00          000000 000000 000000"<< endl;
-    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
-    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
-    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
-    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
-    cout << "\n\n                               >  NUOVA PARTITA  <"<<endl;
-    cout << "\n                                     OPZIONI"<<endl;
-    }
-    if(cursorpos==2)
-    {
-    cout << " "<<endl;
-    cout << "  000000" << endl;
-    cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000"<< endl;
-    cout << "    00                            000         00          000000 000000 000000"<< endl;
-    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
-    cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
-    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
-    cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
-    cout << "\n\n                                  NUOVA PARTITA   "<<endl;
-    cout << "\n                                  >  OPZIONI  <"<<endl;
-    }
-    a=getch();
-    if(a==72)
-    {
-        cursorpos=cursorpos-1;
-    }
-    if(a==80)
-    {
-        cursorpos=cursorpos+1;
-    }
-    if (a==13)//PRESSIONE ENTER SU ELEMENTI MENU
+        char selection = getch();
+        system("cls");
+        if(cursorpos==1)
         {
-            if (cursorpos==1)//AVVIO GIOCO
+            cout << " "                                                                             << endl;
+            cout << "  000000"                                                                      << endl;
+            cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000"<< endl;
+            cout << "    00                            000         00          000000 000000 000000"<< endl;
+            cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+            cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+            cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+            cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+            cout << "\n\n                               >  NUOVA PARTITA  <"<<endl;
+            cout << "\n                                     OPZIONI"<<endl;
+        }
+        else if(cursorpos==2)
+        {
+            cout << " "<<endl;
+            cout << "  000000" << endl;
+            cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000"<< endl;
+            cout << "    00                            000         00          000000 000000 000000"<< endl;
+            cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+            cout << "    00   0000 0000 0000 0000 0000 000         00  00 0000 00  00 000    00  00"<< endl;
+            cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+            cout << "  000000 0000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000"<< endl;
+            cout << "\n\n                                  NUOVA PARTITA   "                        << endl;
+            cout << "\n                                  >  OPZIONI  <"                             << endl;
+        }
+        selection = getch();
+        if(selection==72)
+        {
+            cursorpos--;
+        }
+        else if(selection==80)
+        {
+            cursorpos++;
+        }
+        else if(selection==13)//PRESSIONE ENTER SU ELEMENTI MENU
+        {
+            if(cursorpos==1)//AVVIO GIOCO
             {
                 break;
             }
-            if (cursorpos==2)
+            else if(cursorpos==2)
             {
                 system("cls");
                 cout << "Modificare tipo blocco? (S/N)"<<endl;
@@ -797,7 +798,7 @@ int main()
                 cin >> scelta;
                 if(scelta == 'S' || scelta== 's')
                 {
-                   WALL= 0xDB;
+                    WALL= 0xDB;
                 }
             }
         }
