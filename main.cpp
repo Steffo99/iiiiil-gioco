@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
-//steffo accetta la modifica
-//Costanti di sistema
+//aasdfsadf//Costanti di sistema
 #define X_MAX 80
 #define Y_MAX 23
 #define ROOMS 8
