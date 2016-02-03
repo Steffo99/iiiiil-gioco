@@ -744,7 +744,7 @@ int main()
     cout << "  000000 0000 0000 0000 0000 000000      000000 0000 000000 000000 000000\n";
     titolo= rand()%10;
     cout << "\n\n Citazione all'avvio: "<< splash[titolo] << '\n';
-    cout << "\n\n\n\n Premi INVIO per entrare nel menu!" << '\n';
+    cout << "Premi INVIO per entrare nel menu!" << '\n';
     getch();
     while(true)
     {
