@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
-
+//steffo accetta la modifica
 //Costanti di sistema
 #define X_MAX 80
 #define Y_MAX 23
@@ -52,7 +52,7 @@ void tick();
 void attack(int x, int y);
 Enemy* find(int x, int y);
 
-//Classe entit‡ generica, sia nemico sia giocatore
+//Classe entit√† generica, sia nemico sia giocatore
 class Entity
 {
     public:
@@ -62,7 +62,7 @@ class Entity
         int hp = HP_MAX;
         int hp_max = HP_MAX;
         int move();
-        //Cura di x l'entit‡
+        //Cura di x l'entit√†
         void heal(int x)
         {
             if(hp + x > hp_max)
@@ -74,7 +74,7 @@ class Entity
                 hp += x;
             }
         }
-        //Danneggia di x l'entit‡
+        //Danneggia di x l'entit√†
         void damage(int x)
         {
             if(hp - x <= 0)
@@ -86,7 +86,7 @@ class Entity
                 hp -= x;
             }
         }
-        //Uccide ed elimina l'entit‡
+        //Uccide ed elimina l'entit√†
         void kill()
         {
             hp = 0;
@@ -142,7 +142,7 @@ class Player : public Entity
                                 target = &map[x][y-1];
                                 dir = 1;
                                 break;
-                            case 80: //Freccia gi˘, 2
+                            case 80: //Freccia gi√π, 2
                                 target = &map[x][y+1];
                                 dir = 2;
                                 break;
@@ -154,7 +154,7 @@ class Player : public Entity
                                 target = &map[x+1][y];
                                 dir = 4;
                                 break;
-                            default: //Pag su, pag gi˘, skippa
+                            default: //Pag su, pag gi√π, skippa
                                 target = &map[x][y]; //Un po' hackerino, ma...
                                 break;
                             //Aggiungere gestione del caso che non sia una delle quattro frecce
@@ -275,7 +275,7 @@ class Enemy : public Entity
         {
             if(alive)
             {
-                //Se intorno c'Ë il giocatore
+                //Se intorno c'√® il giocatore
                 if(map[x-1][y] == PLAYER || map[x+1][y] == PLAYER || map[x][y-1] == PLAYER || map[x][y+1] == PLAYER)
                 {
                     //Forse sarebbe meglio fare una funzione per togliere vita che controlla anche se va a 0...
@@ -283,7 +283,7 @@ class Enemy : public Entity
                 }
                 else
                 {
-                    //Se il giocatore Ë vicino, muoviti verso di lui
+                    //Se il giocatore √® vicino, muoviti verso di lui
                     if(map[x-2][y] == PLAYER && map[x-1][y] == EMPTY) //Due a sinistra
                     {
                         map[x][y] = EMPTY;
@@ -302,7 +302,7 @@ class Enemy : public Entity
                         map[x][y-1] = ENEMY;
                         y--;
                     }
-                    else if(map[x][y+2] == PLAYER && map[x][y+1] == EMPTY) //Due in gi˘
+                    else if(map[x][y+2] == PLAYER && map[x][y+1] == EMPTY) //Due in gi√π
                     {
                         map[x][y] = EMPTY;
                         map[x][y+1] = ENEMY;
@@ -368,7 +368,7 @@ class Enemy : public Entity
                             x++;
                         }
                     }
-                    //Il giocatore non Ë vicino
+                    //Il giocatore non √® vicino
                     else
                     {
                         if(map[x-1][y] == EMPTY || map[x+1][y] == EMPTY || map[x][y-1] == EMPTY || map[x][y+1] == EMPTY)
@@ -407,7 +407,7 @@ class Enemy : public Entity
                                             moving = false;
                                         }
                                         break;
-                                    case 3: //Gi˘
+                                    case 3: //Gi√π
                                         if(map[x][y+1] == EMPTY)
                                         {
                                             map[x][y] = EMPTY;
@@ -624,7 +624,7 @@ void generate(int enemies_to_place)
         int start_x = rand() % (X_MAX - size_x - 2) + 1;
         int start_y = rand() % (Y_MAX - size_y - 2) + 1;
         room(start_x, start_y, start_x + size_x, start_y + size_y);
-        //Se non Ë la prima stanza, crea un corridoio che connetta quella appena generata con quella precedente
+        //Se non √® la prima stanza, crea un corridoio che connetta quella appena generata con quella precedente
         if(r > 0)
         {
             int link_x = rand() % size_x + 1 + start_x;
@@ -633,7 +633,7 @@ void generate(int enemies_to_place)
         }
         corridor_x = rand() % size_x + start_x;
         corridor_y = rand() % size_y + start_y;
-        //Posiziona il giocatore se Ë l'ultima stanza
+        //Posiziona il giocatore se √® l'ultima stanza
         if(r == ROOMS - 1)
         {
             map[corridor_x][corridor_y] = PLAYER;
@@ -713,7 +713,7 @@ Enemy* find(int x, int y)
 {
     for(int e=0; e<MAX_ENEMIES; e++)
     {
-        //Se c'Ë un nemico in quella posizione ED E' VIVO
+        //Se c'√® un nemico in quella posizione ED E' VIVO
         if(list[e]->x == x && list[e]->y == y && list[e]->alive)
         {
             return list[e];
