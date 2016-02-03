@@ -733,7 +733,7 @@ int main()
     srand (time(NULL));
     int titolo=0, cursorpos=1;
     string splash[10]{"Ora con ben 2 colori!", "E' come skyrim, ma con una bella grafica!", "Quasi senza bug", "Potrebbe contenere canditi", "Ora in grado di generare fame", "I colori hanno ben 1 sfumatura", "I SEE YOU", "WOLOLO", "AUTOMAAAAAH", "Stai davvero giocando a sta roba? WOW!"};
-    cout << "Ciao dal Fermi!\n";
+    cout << "Hello from Fermi!\n";
     cout << '\n';
     cout << "  000000\n";
     cout << "  000000 0000 0000 0000 0000 0000 000         000000 0000 000000 000000 000000\n";
